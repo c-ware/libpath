@@ -1,0 +1,93 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.TH "LIBPATH_EXISTS" "cware" "March 28th, 2022" "" \
+    "C-Ware Manual"
+
+
+.SH NAME
+libpath_exists - determine if a path exists
+
+.SH SYNOPSIS
+
+.B #include <stdlib.h>
+.br
+.B #include <cware/libpath/libpath.h>
+.br
+
+
+.BI "size_t libpath_exists(const char *" "path" ");"
+
+.SH DESCRIPTION
+The
+.B libpath_exists
+function will determine if the path pointed to by
+.I path
+exists or not.
+
+
+This macro will print an error message to the stderr, and exit the program when
+any of the following conditions are met:
+.RS
+
+
+.IP o 0.4i
+path is NULL
+.br
+
+
+.RE
+
+
+.I path
+will be the path to check for validity
+.br
+
+.SH RETURN VALUE
+This function will return 0 if the path does not exist, and 1 if it does exist.
+
+.SH EXAMPLES
+
+/*
+ * This example showcases how to use the
+.B libpath_exists
+function.
+.br
+*/
+
+
+.B #include <stdlib.h>
+.br
+.B #include <cware/libpath/libpath.h>
+.br
+
+
+int main(void) {
+    printf("Config directory exists: %i\\n", libpath_exists("/home/user/.config"));
+
+    return EXIT_SUCCESS;
+.br
+}
+
+.SH SEE ALSO
+
+.BR cware (cware),
+.BR libpath (cware)
+

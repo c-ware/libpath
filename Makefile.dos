@@ -1,0 +1,27 @@
+# This Makefile is the output of a template Makefile that was
+# processed by the m4 macro preprocessor. It is not intended
+# to be human readable.
+
+CC=cl
+LINKER=link
+OBJS=src/exists.obj src/cwd.obj src/mkdir.obj src/join_path.obj src/rmdir.obj src/is_directory.obj 
+TESTS=tests/test_rmdir.exe tests/test_join_path.exe tests/test_mkdir.exe 
+
+.SUFFIXES: .c .exe .obj
+
+all: $(OBJS) $(TESTS)
+
+clean:
+	del tests\*.obj
+	del tests\*.exe
+	del src\*.obj
+
+check:
+	scripts\check.bat
+
+.c.obj:
+	$(CC) /Fo$@ /c $<
+
+.c.exe:
+	$(CC) /Fo$*.obj /c $<
+	$(LINKER) $(OBJS) $*.obj,$@,nul.map,,nul.def

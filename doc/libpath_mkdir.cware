@@ -1,0 +1,97 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.TH "LIBPATH_MKDIR" "cware" "March 28th, 2022" "" \
+    "C-Ware Manual"
+
+
+.SH NAME
+libpath_mkdir - make a new directory
+
+.SH SYNOPSIS
+
+.B #include <stdlib.h>
+.br
+.B #include <cware/libpath/libpath.h>
+.br
+
+
+.BI "int libpath_mkdir(const char *" "path" ", int " "mode" ");"
+
+.SH DESCRIPTION
+The
+.B libpath_mkdir
+function will make a new directory at a certain path, with a mode. The
+.I mode
+parameter is ignored on MS-DOS.
+
+
+This macro will print an error message to the stderr, and exit the program when
+any of the following conditions are met:
+.RS
+
+
+.IP o 0.4i
+path is NULL
+.br
+
+
+.RE
+
+
+.I path
+will be the path to make the directory at
+.br
+.I mode
+will be the permissions bits
+.br
+
+.SH RETURN VALUE
+This function will return 1 if the creation was successful, and 0 if the
+creation failed.
+
+.SH EXAMPLES
+
+/*
+ * This example showcases how to use the
+.B libpath_mkdir
+function.
+.br
+*/
+
+
+.B #include <stdlib.h>
+.br
+.B #include <cware/libpath/libpath.h>
+.br
+
+
+int main(void) {
+    printf("Creation of 'new_dir' success: %i\\n", libpath_mkdir("new_dir"));
+
+    return EXIT_SUCCESS;
+.br
+}
+
+.SH SEE ALSO
+
+.BR cware (cware),
+.BR libpath (cware)
+

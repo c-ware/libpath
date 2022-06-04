@@ -1,0 +1,68 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.TH "LIBPATH" "cware" "March 28th, 2022" "" \
+    "C-Ware Manual"
+
+
+.SH NAME
+libpath - a cross-platform path utility and file system handler
+
+.SH SYNOPSIS
+
+.B #include <stdlib.h>
+.br
+.B #include <cware/libpath/libpath.h>
+.br
+
+
+.B #define LIBPATH_MAX_PATH /* The maximum path length */
+
+.BI "size_t libpath_join_path(char *" "buffer" ", int" " length" ", ...);"
+.br
+.BI "int libpath_mkdir(const char *" "path" ", int " "mode" ");"
+.BI "int libpath_rmdir(const char *" "path" ");"
+.BI "int libpath_exists(const char *" "path" ");"
+
+.SH DESCRIPTION
+A cross-platform path utility and file system handler that works on modern
+operating systems as well obscure ones. The goal is to provide a universal
+interface for common file system operations like mkdir, and rmdir.
+
+What follows is a list of each function and its associated manual.
+
+.TS
+tab(;);
+lb l
+_ _
+lb l
+.
+Manual;Description
+libpath_join_path(cware);Joining paths into a single buffer
+libpath_mkdir(cware);Make a new directory
+libpath_rmdir(cware);Remove a directory
+libpath_exists(cware);Checks if a path exists.
+.TE
+
+.SH SEE ALSO
+
+.BR cware (cware),
+.BR libpath (cware)
+

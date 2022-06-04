@@ -1,0 +1,43 @@
+include(libpath.m4)
+
+LIBPATH_HEADER()
+
+.SH NAME
+libpath_mkdir - make a new directory
+
+.SH SYNOPSIS
+LIBPATH_INCLUSIONS()
+
+.BI "int libpath_mkdir(const char *" "path" ", int " "mode" ");"
+
+.SH DESCRIPTION
+The
+.B libpath_mkdir
+function will make a new directory at a certain path, with a mode. The
+.I mode
+parameter is ignored on MS-DOS.
+
+LIBPATH_ERROR_LIST_START()
+LIBPATH_ERROR_COND(`path is NULL')
+LIBPATH_ERROR_LIST_END()
+
+LIBPATH_PARAMETER(`path', `the path to make the directory at')
+LIBPATH_PARAMETER(`mode', `the permissions bits')
+
+.SH RETURN VALUE
+This function will return 1 if the creation was successful, and 0 if the
+creation failed.
+
+.SH EXAMPLES
+LIBPATH_EXAMPLE_COMMENT(`libpath_mkdir')
+LIBPATH_INCLUSIONS()
+
+int main(void) {
+    printf("Creation of 'new_dir' success: %i\\n", libpath_mkdir("new_dir"));
+
+    return EXIT_SUCCESS;
+.br
+}
+
+.SH SEE ALSO
+LIBPATH_SEE_ALSO()
