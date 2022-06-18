@@ -1,108 +1,55 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.TH "LIBPATH_JOIN_PATH" "cware" "March 28th, 2022" "" \
-    "C-Ware Manual"
-
-
+.TH "libpath_join_path" "cware" "June 16, 2022" "" "C-Ware Manuals"
 .SH NAME
-libpath_join_path - join strings into a single string
-
+libpath_join_path - join a variable number of path segments into a single buffer
 .SH SYNOPSIS
-
-.B #include <stdlib.h>
-.br
-.B #include <cware/libpath/libpath.h>
+.B "#include ""libpath.h"""
 .br
 
+\fBint libpath_join_path(char *\fIbuffer\fB, int \fIlength\fB);
+.br
 
-.BI "size_t libpath_join_path(char *" "buffer" ", int" " length" ", ...);"
-
+\fR
 .SH DESCRIPTION
-The
-.B libpath_join_path
-function will join strings into a single string while respecting the length of
-a buffer. The final path in the variadic arguments should be NULL to signal the
-end of the path list. It should be noted that this does
-.B not
-add path separators. They must be added manually.
+Join a variable number of path components into a single string. All
+path components will automatically have path segments put between
+them which match the corresponding path for the system it is running
+on. The final path parameter MUST be NULL, and the final string should
+be large enough to have a NUL byte written to it.
 
-
-This macro will print an error message to the stderr, and exit the program when
-any of the following conditions are met:
+This function will display an error to the stderr, and abort the program if any of following conditions are met.
 .RS
-
-
-.IP o 0.4i
-buffer is NULL
+o    buffer is NULL
 .br
-
-
-.IP o 0.4i
-length is less than zero
+o    length is negative
 .br
-
-
 .RE
 
-
-.I buffer
-will be the character array to write the path to
+\fIbuffer\fR will be the buffer to write to
 .br
-.I length
-will be the maximum length of the buffer - 1
+\fIlength\fR will be the length of the buffer
 .br
-
 .SH RETURN VALUE
-This function will return the number of bytes written to the buffer. However,
-if the path must be truncated to fit the length of the buffer, then the maximum
-length of the buffer + 1 is returned to signal the truncation.
-
+This function will return the number of bytes written
+.SH NOTES
+This function has no notes.
 .SH EXAMPLES
-
-/*
- * This example showcases how to use the
-.B libpath_join_path
-function.
-.br
-*/
-
-
-.B #include <stdlib.h>
-.br
-.B #include <cware/libpath/libpath.h>
+#include "libpath.h"
 .br
 
-
+.br
 int main(void) {
-    char buffer[LIBPATH_MAX_PATH + 1] = {0};
+.br
+    char buffer[1024 + 1];
+.br
 
-    /* Get path to the user's home directory */
-    libpath_join_path(buffer, LIBPATH_MAX_PATH, "/home", "/", getenv("USER"));
+.br
+    libpath_join_path(buffer, 1024, LIBPATH_HOME_DIR, "config", NULL); 
+.br
 
-    return EXIT_SUCCESS;
+.br
+    return 0;
 .br
 }
-
+.br
 .SH SEE ALSO
-
-.BR cware (cware),
-.BR libpath (cware)
-
+This function has no references.

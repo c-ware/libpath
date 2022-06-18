@@ -1,0 +1,60 @@
+.TH "libpath_rmdir" "cware" "June 16, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_rmdir - remove a directory
+.SH SYNOPSIS
+.B "#include ""libpath.h"""
+.br
+
+\fBint libpath_rmdir(const char *\fIpath\fB);
+.br
+
+\fR
+.SH DESCRIPTION
+Removes a directory at the path specified. Note that some operating
+systems may not allow you to remove a directory if it is not empty.
+
+This function will display an error to the stderr, and abort the program if any of following conditions are met.
+.RS
+o    path is NULL
+.br
+.RE
+
+\fIpath\fR will be the path of the directory to remove
+.br
+.SH RETURN VALUE
+This function will return LIBPATH_SUCCESS on success, and LIBPATH_FAILURE on failure
+.SH NOTES
+This function has no notes.
+.SH EXAMPLES
+#include <stdio.h>
+.br
+#include <errno.h>
+.br
+#include <stdlib.h>
+.br
+#include <string.h>
+.br
+
+.br
+#include "libpath.h"
+.br
+
+.br
+int main(void) {
+.br
+    if(libpath_rmdir(LIBPATH_ROOT_DIR, "prog_config") == LIBPATH_FAILURE) {
+.br
+        fprintf(stderr, "prog: failed to remove directory (%s)\n", strerror(errno));
+.br
+        exit(EXIT_FAILURE);
+.br
+    }
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+This function has no references.

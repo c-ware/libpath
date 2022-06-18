@@ -1,93 +1,61 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.TH "LIBPATH_EXISTS" "cware" "March 28th, 2022" "" \
-    "C-Ware Manual"
-
-
+.TH "libpath_exists" "cware" "June 16, 2022" "" "C-Ware Manuals"
 .SH NAME
-libpath_exists - determine if a path exists
-
+libpath_exists - determine if a path exists on the file system
 .SH SYNOPSIS
-
-.B #include <stdlib.h>
-.br
-.B #include <cware/libpath/libpath.h>
+.B "#include ""libpath.h"""
 .br
 
+\fBint libpath_exists(const char *\fIpath\fB);
+.br
 
-.BI "size_t libpath_exists(const char *" "path" ");"
-
+\fR
 .SH DESCRIPTION
-The
-.B libpath_exists
-function will determine if the path pointed to by
-.I path
-exists or not.
+Determine if a path exists on the file system. This function is garunteed
+to work on all types of file system components. Specifically, files AND
+directories.
 
-
-This macro will print an error message to the stderr, and exit the program when
-any of the following conditions are met:
+This function will display an error to the stderr, and abort the program if any of following conditions are met.
 .RS
-
-
-.IP o 0.4i
-path is NULL
+o    path is NULL
 .br
-
-
 .RE
 
-
-.I path
-will be the path to check for validity
+\fIpath\fR will be the path to check
 .br
-
 .SH RETURN VALUE
-This function will return 0 if the path does not exist, and 1 if it does exist.
-
+This function will return 1 if the path exists, and 0 if it does not
+.SH NOTES
+This function has no notes.
 .SH EXAMPLES
-
-/*
- * This example showcases how to use the
-.B libpath_exists
-function.
+#include <stdio.h>
 .br
-*/
-
-
-.B #include <stdlib.h>
+#include <errno.h>
 .br
-.B #include <cware/libpath/libpath.h>
+#include <stdlib.h>
+.br
+#include <string.h>
 .br
 
+.br
+#include "libpath.h"
+.br
 
+.br
 int main(void) {
-    printf("Config directory exists: %i\\n", libpath_exists("/home/user/.config"));
+.br
+    if(libpath_exists(LIBPATH_ROOT_DIR, "prog_config") == LIBPATH_FAILURE) {
+.br
+        fprintf(stderr, "%s", "prog: cannot make directory-- already exists\n");
+.br
+        exit(EXIT_FAILURE);
+.br
+    }
+.br
 
-    return EXIT_SUCCESS;
+.br
+    return 0;
 .br
 }
-
+.br
 .SH SEE ALSO
-
-.BR cware (cware),
-.BR libpath (cware)
-
+This function has no references.

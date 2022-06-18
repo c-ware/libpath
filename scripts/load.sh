@@ -1,14 +1,19 @@
 #!/bin/sh
-# Process all files with m4 and output them to their respective directories.
+# Load documentation and Makefiles. Requires docgen and makegen
+# as dependencies. Although, this realistically should not be
+# ran by end users, and should instead be ran by developers.
 
-# Process all manual pages
-for manual in ./templates/doc/*.template; do
-    manual_name=`basename $manual | cut -d '.' -f 1`
-    upper_manual_name=`echo $manual_name | tr '[a-z]' '[A-Z]'`
+docgen project ./src/libpath.h --section cware  \
+                               --format manpage \
+                               --title 'C-Ware Manuals' \
+                               --date "`date +'%B %d, %Y'`"
 
-    m4 $manual -I ./templates/doc/ | grep -v '^##' | sed "s/CWARE_MANUAL_NAME/$upper_manual_name/g" > ./doc/$manual_name.cware
-done
+docgen functions ./src/libpath.h --section cware  \
+                                 --format manpage \
+                                 --title 'C-Ware Manuals' \
+                                 --date "`date +'%B %d, %Y'`"
 
-# Process the Makefiles
-m4 ./templates/Makefile.template > ./Makefile
-m4 ./templates/Makefile.dos.template > ./Makefile.dos
+makegen library unix --name libpath \
+                     --cflags '\-fpic' > Makefile
+
+m4 ./template/Makefile.dos > ./Makefile.dos

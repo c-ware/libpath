@@ -1,97 +1,64 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.TH "LIBPATH_MKDIR" "cware" "March 28th, 2022" "" \
-    "C-Ware Manual"
-
-
+.TH "libpath_mkdir" "cware" "June 16, 2022" "" "C-Ware Manuals"
 .SH NAME
-libpath_mkdir - make a new directory
-
+libpath_mkdir - make a new directory at the provided path
 .SH SYNOPSIS
-
-.B #include <stdlib.h>
-.br
-.B #include <cware/libpath/libpath.h>
+.B "#include ""libpath.h"""
 .br
 
+\fBint libpath_mkdir(const char *\fIpath\fB, int \fImode\fB);
+.br
 
-.BI "int libpath_mkdir(const char *" "path" ", int " "mode" ");"
-
+\fR
 .SH DESCRIPTION
-The
-.B libpath_mkdir
-function will make a new directory at a certain path, with a mode. The
-.I mode
-parameter is ignored on MS-DOS.
+Creates a new directory at a given path and uses the provided mode for
+the directory permissions. That being said, some operating systems, like
+MS-DOS, do not have a directory permissions configuration method through
+their mkdir function. In cases like these, simply pass zero.
 
-
-This macro will print an error message to the stderr, and exit the program when
-any of the following conditions are met:
+This function will display an error to the stderr, and abort the program if any of following conditions are met.
 .RS
-
-
-.IP o 0.4i
-path is NULL
+o    path is NULL
 .br
-
-
 .RE
 
-
-.I path
-will be the path to make the directory at
+\fIpath\fR will be the path to make the directory at
 .br
-.I mode
-will be the permissions bits
+\fImode\fR will be the file permissions
 .br
-
 .SH RETURN VALUE
-This function will return 1 if the creation was successful, and 0 if the
-creation failed.
-
+This function will return LIBPATH_SUCCESS on success, and LIBPATH_FAILURE on failure
+.SH NOTES
+This function has no notes.
 .SH EXAMPLES
-
-/*
- * This example showcases how to use the
-.B libpath_mkdir
-function.
+#include <stdio.h>
 .br
-*/
-
-
-.B #include <stdlib.h>
+#include <errno.h>
 .br
-.B #include <cware/libpath/libpath.h>
+#include <stdlib.h>
+.br
+#include <string.h>
 .br
 
+.br
+#include "libpath.h"
+.br
 
+.br
 int main(void) {
-    printf("Creation of 'new_dir' success: %i\\n", libpath_mkdir("new_dir"));
+.br
+    if(libpath_mkdir(LIBPATH_ROOT_DIR, "prog_config") == LIBPATH_FAILURE) {
+.br
+        fprintf(stderr, "prog: failed to make directory (%s)\n", strerror(errno));
+.br
+        exit(EXIT_FAILURE);
+.br
+    }
+.br
 
-    return EXIT_SUCCESS;
+.br
+    return 0;
 .br
 }
-
+.br
 .SH SEE ALSO
-
-.BR cware (cware),
-.BR libpath (cware)
-
+This function has no references.

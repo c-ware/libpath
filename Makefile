@@ -1,37 +1,42 @@
-# This Makefile is the output of a template Makefile that was
-# processed by the m4 macro preprocessor. It is not intended
-# to be human readable.
-
+OBJS=./src/libpath.o 
+TESTS=./tests/joinpath ./tests/mkdir ./tests/rmdir 
+HEADERS=./src/lp_inter.h ./src/libpath.h ./src/liberror/liberror.h 
 CC=cc
 PREFIX=/usr/local
-CFLAGS=
-OBJS=src/exists.o src/cwd.o src/mkdir.o src/join_path.o src/rmdir.o src/is_directory.o 
-TESTS=tests/test_rmdir.out tests/test_join_path.out tests/test_mkdir.out 
-DOCS=./doc/libpath_join_path.cware ./doc/libpath.cware ./doc/libpath_exists.cware ./doc/libpath_mkdir.cware 
-MANNAMES=libpath_join_path.cware libpath.cware libpath_exists.cware libpath_mkdir.cware 
-DEBUGGER=
+CFLAGS=-fpic
 
-all: $(OBJS) $(TESTS)
+all: $(OBJS) $(TESTS) libpath.so
 
 clean:
-	rm -f $(TESTS)
-	rm -f $(OBJS)
-
-check:
-	./scripts/check.sh $(DEBUGGER)
+	rm -rf $(OBJS)
+	rm -rf $(TESTS)
+	rm -rf vgcore.*
+	rm -rf core*
+	rm -rf libpath.so
 
 install:
-	for manual in $(MANNAMES); do					  \
-		cp doc/$$manual $(PREFIX)/share/man/mancware; \
-	done
+	mkdir -p $(PREFIX)
+	mkdir -p $(PREFIX)/lib
+	mkdir -p $(PREFIX)/include
+	mkdir -p $(PREFIX)/include/libpath
+	install -m 755 libpath.so $(PREFIX)/lib
+	install -m 644 $(HEADERS) $(PREFIX)/include/libpath
 
 uninstall:
-	for manual in $(MANNAMES); do					 \
-		rm -f $(PREFIX)/share/man/mancware/$$manual; \
-    done
+	rm -rf $(PREFIX)/include/libpath
+	rm -f $(PREFIX)/lib/libpath.so
 
-.c.out:
-	$(CC) $< $(OBJS) $(CFLAGS) -o $@
+./tests/joinpath: ./tests/joinpath.c ./tests/common.h $(OBJS)
+	$(CC) ./tests/joinpath.c -o ./tests/joinpath $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
-.c.o:
-	$(CC) -c $< $(CFLAGS) -o $@
+./tests/mkdir: ./tests/mkdir.c ./tests/common.h $(OBJS)
+	$(CC) ./tests/mkdir.c -o ./tests/mkdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+
+./tests/rmdir: ./tests/rmdir.c ./tests/common.h $(OBJS)
+	$(CC) ./tests/rmdir.c -o ./tests/rmdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+
+./src/libpath.o: ./src/libpath.c ./src/libpath.h ./src/libpath_internal.h
+	$(CC) -c $(CFLAGS) ./src/libpath.c -o ./src/libpath.o $(LDFLAGS) $(LDLIBS)
+
+libpath.so: $(OBJS)
+	$(CC) $(OBJS) -shared -o libpath.so

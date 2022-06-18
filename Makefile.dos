@@ -4,8 +4,8 @@
 
 CC=cl
 LINKER=link
-OBJS=src/exists.obj src/cwd.obj src/mkdir.obj src/join_path.obj src/rmdir.obj src/is_directory.obj 
-TESTS=tests/test_rmdir.exe tests/test_join_path.exe tests/test_mkdir.exe 
+OBJS=src\libpath.obj 
+TESTS=tests\joinpath.exe tests\mkdir.exe tests\rmdir.exe 
 
 .SUFFIXES: .c .exe .obj
 
