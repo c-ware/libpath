@@ -43,10 +43,16 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+/* Inclusions for traversing directories */
+
 /* MS-DOS has a header specifically for it that contains
  * system calls for reading files */
 #if defined(_MSDOS)
 #include <dos.h>
+#endif
+
+#if defined(__unix__)
+#include <dirent.h>
 #endif
 
 /* Inclusions for the stat system call, or any equivalent
@@ -65,45 +71,47 @@
 #include <unistd.h>
 #endif
 
+
 #include "libpath.h"
-#include "libpath_internal.h"
+#include "lp_inter.h"
 
 int libpath_join_path(char *buffer, int length, ...) {
-    char *path = NULL;
-    size_t written = 0;
-    va_list paths = {0};
-    int buffer_cursor = 0;
+    int written = 0;
+    va_list path_segment;
+    char *segment = NULL;
 
-    liberror_is_null(libpath_join_path, buffer);
-    liberror_is_negative(libpath_join_path, length);
+    INIT_VARIABLE(path_segment);
+    va_start(path_segment, length);
 
-    va_start(paths, length);
+    segment = va_arg(path_segment, char *);
 
-    /* Get each path component */
-    while((path = va_arg(paths, char*)) != NULL) {
-        int path_cursor = 0;
+    while(segment != NULL) {
+        int cursor = 0;
 
-        if(buffer_cursor == length) {
-            written = length + 1;
-
-            break;
-
+        /* Write the path segment to the buffer */
+        while(written < length && segment[cursor] != '\0') {
+            buffer[written] = segment[cursor];
+            cursor++;
+            written++;
         }
 
-        /* Write the path */
-        for(path_cursor = 0; path[path_cursor] != '\0'; path_cursor++) {
-            if(buffer_cursor == length)
-                break;
+        cursor = 0;
+        segment = va_arg(path_segment, char *);
 
-            buffer[buffer_cursor] = path[path_cursor];
-            buffer_cursor++;
+        if(segment == NULL)
+            break;
+
+
+        /* Write the path separator if the next one is not NULL */
+        while(written < length && LIBPATH_SEPARATOR[cursor]) {
+            buffer[written] = LIBPATH_SEPARATOR[cursor];
+            cursor++;
             written++;
         }
     }
 
-    va_end(paths);
-    buffer[buffer_cursor] = '\0';
-
+    buffer[written] = '\0';
+    
     return written;
 }
 
@@ -217,7 +225,7 @@ struct LibpathFiles *libpath_glob(const char *path, const char *pattern) {
         struct LibpathFile new_path;
 
         /* This path does not match the glob pattern-- ignore it */
-        if(libpath_matches_glob(entry->d_name, pattern) == 0)
+        if(matches_glob(entry->d_name, pattern) == 0)
             continue;
 
         /* Replace this with libpath_join_path eventually.. */

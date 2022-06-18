@@ -59,4 +59,15 @@
 #define FILE_HEAP           1
 #define FILE_FREE(value)
 
+struct LibpathFile {
+    char path[LIBPATH_GLOB_PATH_LENGTH + 1];
+};
+
+
+struct LibpathFiles {
+    int length;
+    int capacity;
+    struct LibpathFile *contents;
+};
+
 #endif

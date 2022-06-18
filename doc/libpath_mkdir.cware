@@ -1,4 +1,4 @@
-.TH "libpath_mkdir" "cware" "June 16, 2022" "" "C-Ware Manuals"
+.TH "libpath_mkdir" "cware" "June 18, 2022" "" "C-Ware Manuals"
 .SH NAME
 libpath_mkdir - make a new directory at the provided path
 .SH SYNOPSIS
