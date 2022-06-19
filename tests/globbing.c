@@ -4,21 +4,43 @@
 
 #include "common.h"
 
-int main(void) {
-    struct LibpathFiles globbed_files_a = libpath_glob("tests/assets", "*.h");
-    struct LibpathFiles globbed_files_b = libpath_glob("tests/assets", "*.*");
-    struct LibpathFiles globbed_files_c = libpath_glob("tests/assets", "*.c");
+void dump_match(const char *pattern, struct LibpathFiles files) {
+    int index = 0;
 
-    assert(globbed_files_a.length == 3);
-    assert(globbed_files_b.length == 6);
+    printf("'%s' globbed: \n", pattern);
+
+    for(index = 0; index < files.length; index++) {
+        printf("\t%s\n", files.contents[index].path);
+    }
+
+    printf("%c", '\n');
+}
+
+void assert_matched(const char *path, const char *pattern, int length) {
+    struct LibpathFiles globbed_files = libpath_glob(path, pattern);
+
+    /*dump_match(pattern, globbed_files);*/
+    assert(globbed_files.length == length);
+
+    libpath_free_glob(globbed_files);
+}
+
+int main(void) {
+    assert_matched("tests/assets", "*.h", 3);
+    assert_matched("tests/assets", "*.*", 10);
 
     /* There are three files with the cpp prefix. Make sure globbing
      * does not count them even though they might match PART prefix */
-    assert(globbed_files_c.length == 0);
+    assert_matched("tests/assets", "*.c", 0);
 
-    libpath_free_glob(globbed_files_a);
-    libpath_free_glob(globbed_files_b);
-    libpath_free_glob(globbed_files_c);
+    /* Should match both cxx and cpp files */
+    assert_matched("tests/assets", "*.c*", 7);
+
+    /* Should match both cxx and cpp files */
+    assert_matched("tests/assets", "foo.*", 3);
+
+    assert_matched("tests/assets", "*a*.*", 7);
+    assert_matched("tests/assets", "*ar*.*", 4);
 
     return 0;
 }

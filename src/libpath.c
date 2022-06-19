@@ -205,7 +205,7 @@ static int matches_glob(const char *name, const char *pattern) {
          * as name[name_cursor] will be on the NUL byte. This section
          * will essentially just exhaust the wildcard.
         */
-        while(name[name_cursor] != stop_char)
+        while(name[name_cursor] != stop_char && name[name_cursor] != '\0')
             name_cursor++;
 
         /* Name exhausted before the path */
