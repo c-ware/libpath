@@ -173,8 +173,13 @@ static int matches_glob(const char *name, const char *pattern) {
         /* Match characters in the pattern until a wildcard
          * character is found. */
         while(pattern[pattern_cursor] != '*') {
-            if(pattern[pattern_cursor] == '\0' || name[name_cursor] == '\0')
+            if(pattern[pattern_cursor] == '\0' || name[name_cursor] == '\0') {
+                /* Pattern exhausted before the name */
+                if(pattern[pattern_cursor] == '\0' && name[name_cursor] != '\0')
+                    return 0;
+
                 break;
+            }
 
             if(pattern[pattern_cursor] == name[name_cursor]) {
                 name_cursor++;
@@ -206,23 +211,36 @@ static int matches_glob(const char *name, const char *pattern) {
         /* Name exhausted before the path */
         if(name[name_cursor] == '\0' && pattern[pattern_cursor] != '\0')
             return 0;
+
     }
 
     return 1;
 }
 
 #if defined(__unix__)
-struct LibpathFiles *libpath_glob(const char *path, const char *pattern) {
+struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     DIR *directory = NULL;
     struct dirent *entry = NULL;
-    struct LibpathFiles *globbed_files = NULL;
+    struct LibpathFiles globbed_files;
  
+    INIT_VARIABLE(globbed_files);
+
+    /* Rather than use the base carray initialization logic, we do
+     * our own initialization because carray has no way to initialize
+     * a stack structure but with a heap contents field. */
+    globbed_files.length = 0;
+    globbed_files.capacity = 5;
+    globbed_files.contents = malloc(sizeof(struct LibpathFile) * 5);
+
     directory = opendir(path);
-    globbed_files = carray_init(globbed_files, FILE);
 
     /* Iterate through the contents of this directory. */
     while((entry = readdir(directory)) != NULL) {
         struct LibpathFile new_path;
+
+        /* No thanks */
+        if(strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
 
         /* This path does not match the glob pattern-- ignore it */
         if(matches_glob(entry->d_name, pattern) == 0)
@@ -231,13 +249,15 @@ struct LibpathFiles *libpath_glob(const char *path, const char *pattern) {
         /* Replace this with libpath_join_path eventually.. */
         sprintf(new_path.path, "%s/%s", path, entry->d_name);
 
-        carray_append(globbed_files, new_path, FILE);
+        carray_append(&globbed_files, new_path, FILE);
     }
-
 
     closedir(directory);
 
     return globbed_files;
 }
-
 #endif
+
+void libpath_free_glob(struct LibpathFiles files) {
+    free(files.contents);
+}

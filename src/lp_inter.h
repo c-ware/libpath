@@ -51,23 +51,9 @@
 #define INIT_VARIABLE(variable) \
     memset(&(variable), 0, sizeof((variable)))
 
-/* Limits */
-#define LIBPATH_GLOB_PATH_LENGTH    256 + 1
-
 /* Data structure properties */
 #define FILE_TYPE           struct LibpathFile
 #define FILE_HEAP           1
 #define FILE_FREE(value)
-
-struct LibpathFile {
-    char path[LIBPATH_GLOB_PATH_LENGTH + 1];
-};
-
-
-struct LibpathFiles {
-    int length;
-    int capacity;
-    struct LibpathFile *contents;
-};
 
 #endif

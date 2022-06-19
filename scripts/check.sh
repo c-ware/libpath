@@ -4,7 +4,7 @@
 # $1: the debugger to run the file on
 
 for test_file in tests/*; do
-    if [ ! -x "$test_file" ]; then
+    if [ ! -x "$test_file" ] || [ -d "$test_file" ]; then
         continue
     fi
 

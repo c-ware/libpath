@@ -1,32 +1,24 @@
-.TH "libpath_glob" "cware" "June 18, 2022" "" "C-Ware Manuals"
+.TH "libpath_free_glob" "cware" "June 18, 2022" "" "C-Ware Manuals"
 .SH NAME
-libpath_glob - extract files and directories from a path based off a pattern
+libpath_free_glob - release a glob from memory
 .SH SYNOPSIS
 .B "#include ""libpath.h"""
 .br
 
-\fBstruct LibpathFiles libpath_glob(const char *\fIpath\fB, const char *\fIpattern\fB);
+\fBvoid libpath_free_glob(struct LibpathFiles \fIfiles\fB);
 .br
 
 \fR
 .SH DESCRIPTION
-This function will extract all files and subdirectories inside of a
-directory based off a pattern. The pattern is similar (although fairly
-limited in comparison to) shell expansions.
-
-Currently, libpath_glob allows the following syntax:
-*
-    Wildcard-- match any character until the right-most character, or the NUL byte
+Releases an array of globbed files from memory.
 
 This function has no error conditions.
 .br
 
-\fIpath\fR will be the path to glob in
-.br
-\fIpattern\fR will be the pattern to glob
+\fIfiles\fR will be the files to release
 .br
 .SH RETURN VALUE
-This function will return an array of globbed paths
+This function has no return value.
 .SH NOTES
 This function has no notes.
 .SH EXAMPLES
@@ -63,6 +55,10 @@ int main(void) {
         printf("Globbed file: '%s'\n", file.path);
 .br
     }
+.br
+
+.br
+    libpath_free_glob(globbed_files);
 .br
 
 .br

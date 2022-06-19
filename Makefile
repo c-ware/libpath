@@ -1,5 +1,5 @@
 OBJS=./src/libpath.o 
-TESTS=./tests/joinpath ./tests/mkdir ./tests/rmdir 
+TESTS=./tests/joinpath ./tests/mkdir ./tests/globbing ./tests/rmdir 
 HEADERS=./src/lp_inter.h ./src/libpath.h ./src/carray/carray.h ./src/liberror/liberror.h 
 CC=cc
 PREFIX=/usr/local
@@ -31,6 +31,9 @@ uninstall:
 
 ./tests/mkdir: ./tests/mkdir.c ./tests/common.h $(OBJS)
 	$(CC) ./tests/mkdir.c -o ./tests/mkdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+
+./tests/globbing: ./tests/globbing.c ./tests/common.h $(OBJS)
+	$(CC) ./tests/globbing.c -o ./tests/globbing $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
 ./tests/rmdir: ./tests/rmdir.c ./tests/common.h $(OBJS)
 	$(CC) ./tests/rmdir.c -o ./tests/rmdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)

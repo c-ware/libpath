@@ -63,6 +63,9 @@
 
 #define CWARE_LIBCWPATH_VERSION  "1.0.1"
 
+/* Limits */
+#define LIBPATH_GLOB_PATH_LENGTH    256 + 1
+
 /* 
  * The maximum path lengths of various operating systems
  * These values will contain at *least* the correct number of bytes
@@ -129,6 +132,16 @@
 #if defined(_MSDOS) || defined(_WIN32)
 #define LIBPATH_SUCCESS 0
 #endif
+
+struct LibpathFile {
+    char path[LIBPATH_GLOB_PATH_LENGTH + 1];
+};
+
+struct LibpathFiles {
+    int length;
+    int capacity;
+    struct LibpathFile *contents;
+};
 
 /*
  * @docgen: function
@@ -331,11 +344,11 @@ int libpath_exists(const char *path);
  * @
  * @int main(void) {
  * @    int index = 0;
- * @    struct LibpathFiles *globbed_files = libpath_glob("./",  "*.*");
+ * @    struct LibpathFiles globbed_files = libpath_glob("./",  "*.*");
  * @
  * @    // Display all globbed files
- * @    for(index = 0; index < globbed_files->length; index++) {
- * @        struct LibpathFile file = globbed_files->contents[index];
+ * @    for(index = 0; index < globbed_files.length; index++) {
+ * @        struct LibpathFile file = globbed_files.contents[index];
  * @
  * @        printf("Globbed file: '%s'\n", file.path);
  * @    }
@@ -343,7 +356,59 @@ int libpath_exists(const char *path);
  * @    return 0;
  * @}
  * @example
+ *
+ * @param path: the path to glob in
+ * @type: const char *
+ *
+ * @param pattern: the pattern to glob
+ * @type: const char *
+ *
+ * @return: an array of globbed paths
+ * @type: struct LibpathFiles
 */
-struct LibpathFiles *libpath_glob(const char *path, const char *pattern);
+struct LibpathFiles libpath_glob(const char *path, const char *pattern);
+
+/*
+ * @docgen: function
+ * @brief: release a glob from memory
+ * @name: libpath_free_glob
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @Releases an array of globbed files from memory.
+ * @description
+ *
+ * @example
+ * @#include <stdio.h>
+ * @#include <errno.h>
+ * @#include <stdlib.h>
+ * @#include <string.h>
+ * @
+ * @#include "libpath.h"
+ * @
+ * @int main(void) {
+ * @    int index = 0;
+ * @    struct LibpathFiles globbed_files = libpath_glob("./",  "*.*");
+ * @
+ * @    // Display all globbed files
+ * @    for(index = 0; index < globbed_files.length; index++) {
+ * @        struct LibpathFile file = globbed_files.contents[index];
+ * @
+ * @        printf("Globbed file: '%s'\n", file.path);
+ * @    }
+ * @
+ * @    libpath_free_glob(globbed_files);
+ * @
+ * @    return 0;
+ * @}
+ * @example
+ *
+ * @param files: the files to release
+ * @type: struct LibpathFiles
+*/
+void libpath_free_glob(struct LibpathFiles files);
+
+
 
 #endif
