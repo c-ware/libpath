@@ -19,28 +19,28 @@ void dump_match(const char *pattern, struct LibpathFiles files) {
 void assert_matched(const char *path, const char *pattern, int length) {
     struct LibpathFiles globbed_files = libpath_glob(path, pattern);
 
-    /*dump_match(pattern, globbed_files);*/
+    dump_match(pattern, globbed_files);
     assert(globbed_files.length == length);
 
     libpath_free_glob(globbed_files);
 }
 
 int main(void) {
-    assert_matched("tests/assets", "*.h", 3);
-    assert_matched("tests/assets", "*.*", 10);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.h", 3);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.*", 10);
 
     /* There are three files with the cpp prefix. Make sure globbing
      * does not count them even though they might match PART prefix */
-    assert_matched("tests/assets", "*.c", 0);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.c", 0);
 
     /* Should match both cxx and cpp files */
-    assert_matched("tests/assets", "*.c*", 7);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.c*", 7);
 
     /* Should match both cxx and cpp files */
-    assert_matched("tests/assets", "foo.*", 3);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "foo.*", 3);
 
-    assert_matched("tests/assets", "*a*.*", 7);
-    assert_matched("tests/assets", "*ar*.*", 4);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "*a*.*", 7);
+    assert_matched("tests" LIBPATH_SEPARATOR "assets", "*ar*.*", 4);
 
     return 0;
 }

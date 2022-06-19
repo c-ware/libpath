@@ -1,4 +1,4 @@
-.TH "libpath_exists" "cware" "June 18, 2022" "" "C-Ware Manuals"
+.TH "libpath_exists" "cware" "June 19, 2022" "" "C-Ware Manuals"
 .SH NAME
 libpath_exists - determine if a path exists on the file system
 .SH SYNOPSIS

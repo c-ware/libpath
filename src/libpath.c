@@ -39,7 +39,10 @@
  * Implementations of the libpath functions.
 */
 
+#include <ctype.h>
+#include <errno.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
 
@@ -181,12 +184,21 @@ static int matches_glob(const char *name, const char *pattern) {
                 break;
             }
 
+#if defined(_MSDOS)
+            if(toupper(pattern[pattern_cursor]) == toupper(name[name_cursor])) {
+                name_cursor++;
+                pattern_cursor++;
+
+                continue;
+            }
+#else
             if(pattern[pattern_cursor] == name[name_cursor]) {
                 name_cursor++;
                 pattern_cursor++;
 
                 continue;
             }
+#endif
 
             /* Match not valid! */
             return 0;
@@ -205,12 +217,22 @@ static int matches_glob(const char *name, const char *pattern) {
          * as name[name_cursor] will be on the NUL byte. This section
          * will essentially just exhaust the wildcard.
         */
+#if defined(_MSDOS)
+        while(toupper(name[name_cursor]) != toupper(stop_char) && toupper(name[name_cursor]) != '\0')
+            name_cursor++;
+#else
         while(name[name_cursor] != stop_char && name[name_cursor] != '\0')
             name_cursor++;
+#endif
 
         /* Name exhausted before the path */
+#if defined(_MSDOS)
+        if(toupper(name[name_cursor]) == '\0' && toupper(pattern[pattern_cursor]) != '\0')
+            return 0;
+#else
         if(name[name_cursor] == '\0' && pattern[pattern_cursor] != '\0')
             return 0;
+#endif
 
     }
 
@@ -247,7 +269,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
             continue;
 
         if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
-                             entry->d_name) >= LIBPATH_GLOB_PATH_LENGTH) {
+                             entry->d_name, NULL) >= LIBPATH_GLOB_PATH_LENGTH) {
             liberror_unhandled(libpath_glob);
         }
 
@@ -255,6 +277,72 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     }
 
     closedir(directory);
+
+    return globbed_files;
+}
+#endif
+
+#if defined(_MSDOS)
+struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
+    int status = -1;
+    struct _find_t node;
+    struct LibpathFiles globbed_files;
+    char glob_path[LIBPATH_GLOB_PATH_LENGTH + 1] = "";
+ 
+    INIT_VARIABLE(node);
+    INIT_VARIABLE(globbed_files);
+
+    /* Rather than use the base carray initialization logic, we do
+     * our own initialization because carray has no way to initialize
+     * a stack structure but with a heap contents field. */
+    globbed_files.length = 0;
+    globbed_files.capacity = 5;
+    globbed_files.contents = malloc(sizeof(struct LibpathFile) * 5);
+
+    /* Build the path to the glob. */
+    if(libpath_join_path(glob_path, LIBPATH_GLOB_PATH_LENGTH, path, "*.*",
+                         NULL) >= LIBPATH_GLOB_PATH_LENGTH) {
+        fprintf(stderr, "libpath_glob: could not glob path '%s': glob path full\n", glob_path);
+        exit(EXIT_FAILURE);
+    }
+
+    /* Begin node iteration */
+    status = _dos_findfirst(glob_path, _A_NORMAL | _A_SUBDIR, &node);
+
+    /* Iterate through the contents of this node. */
+    while(status == 0) {
+        struct LibpathFile new_path;
+
+        /* No thanks */
+        if(strcmp(node.name, ".") == 0 || strcmp(node.name, "..") == 0) {
+            status = _dos_findnext(&node);
+
+            continue;
+        }
+
+        /* This path does not match the glob pattern-- ignore it */
+        if(matches_glob(node.name, pattern) == 0)  {
+            status = _dos_findnext(&node);
+
+            continue;
+        }
+
+        if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
+                             node.name, NULL) >= LIBPATH_GLOB_PATH_LENGTH) {
+            liberror_unhandled(libpath_glob);
+        }
+
+        carray_append(&globbed_files, new_path, FILE);
+
+        status = _dos_findnext(&node);
+    }
+
+    /* Handle errors */
+    if(status == -1) {
+        fprintf(stderr, "libpath_glob: failed to glob path '%s' (%s)\n", glob_path,
+                strerror(errno));
+        exit(EXIT_FAILURE);
+    }
 
     return globbed_files;
 }

@@ -5,7 +5,7 @@
 CC=cl
 LINKER=link
 OBJS=src\libpath.obj 
-TESTS=tests\joinpath.exe tests\mkdir.exe tests\globbing.exe tests\rmdir.exe 
+TESTS=tests\joinpath.exe tests\mkdir.exe tests\globbing.exe tests\rmdir.exe tests\globbing.c
 
 .SUFFIXES: .c .exe .obj
 

@@ -1,4 +1,4 @@
-.TH "libpath_glob" "cware" "June 18, 2022" "" "C-Ware Manuals"
+.TH "libpath_glob" "cware" "June 19, 2022" "" "C-Ware Manuals"
 .SH NAME
 libpath_glob - extract files and directories from a path based off a pattern
 .SH SYNOPSIS
