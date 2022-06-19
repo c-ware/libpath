@@ -246,8 +246,10 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         if(matches_glob(entry->d_name, pattern) == 0)
             continue;
 
-        /* Replace this with libpath_join_path eventually.. */
-        sprintf(new_path.path, "%s/%s", path, entry->d_name);
+        if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
+                             entry->d_name) >= LIBPATH_GLOB_PATH_LENGTH) {
+            liberror_unhandled(libpath_glob);
+        }
 
         carray_append(&globbed_files, new_path, FILE);
     }

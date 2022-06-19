@@ -182,7 +182,12 @@ struct LibpathFiles {
  * @return: the number of bytes written
  * @type: int
 */
+#if defined(__GNUC__)
+int libpath_join_path(char *buffer, int length, ...)
+    __attribute__((sentinel(0)));
+#else
 int libpath_join_path(char *buffer, int length, ...);
+#endif
 
 /*
  * @docgen: function
