@@ -19,7 +19,6 @@ void dump_match(const char *pattern, struct LibpathFiles files) {
 void assert_matched(const char *path, const char *pattern, int length) {
     struct LibpathFiles globbed_files = libpath_glob(path, pattern);
 
-    dump_match(pattern, globbed_files);
     assert(globbed_files.length == length);
 
     libpath_free_glob(globbed_files);
