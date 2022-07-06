@@ -1,8 +1,10 @@
-OBJS=./src/libpath.o 
-TESTS=./tests/joinpath ./tests/mkdir ./tests/globbing ./tests/rmdir 
-HEADERS=./src/lp_inter.h ./src/libpath.h ./src/carray/carray.h ./src/liberror/liberror.h 
+OBJS=src/libpath.o src/path.o 
+TESTS=tests/joinpath tests/mkdir tests/globbing tests/rmdir tests/compile 
+HEADERS=src/lp_inter.h src/libpath.h src/carray/carray.h src/liberror/liberror.h 
 CC=cc
 PREFIX=/usr/local
+LDFLAGS=
+LDLIBS=
 CFLAGS=-fpic
 
 all: $(OBJS) $(TESTS) libpath.so
@@ -26,20 +28,26 @@ uninstall:
 	rm -rf $(PREFIX)/include/libpath
 	rm -f $(PREFIX)/lib/libpath.so
 
-./tests/joinpath: ./tests/joinpath.c ./tests/common.h $(OBJS)
-	$(CC) ./tests/joinpath.c -o ./tests/joinpath $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+tests/joinpath: tests/joinpath.c tests/common.h $(OBJS)
+	$(CC) tests/joinpath.c -o tests/joinpath $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
-./tests/mkdir: ./tests/mkdir.c ./tests/common.h $(OBJS)
-	$(CC) ./tests/mkdir.c -o ./tests/mkdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+tests/mkdir: tests/mkdir.c tests/common.h $(OBJS)
+	$(CC) tests/mkdir.c -o tests/mkdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
-./tests/globbing: ./tests/globbing.c ./tests/common.h $(OBJS)
-	$(CC) ./tests/globbing.c -o ./tests/globbing $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+tests/globbing: tests/globbing.c tests/common.h $(OBJS)
+	$(CC) tests/globbing.c -o tests/globbing $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
-./tests/rmdir: ./tests/rmdir.c ./tests/common.h $(OBJS)
-	$(CC) ./tests/rmdir.c -o ./tests/rmdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+tests/rmdir: tests/rmdir.c tests/common.h $(OBJS)
+	$(CC) tests/rmdir.c -o tests/rmdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
-./src/libpath.o: ./src/libpath.c ./src/libpath.h ./src/lp_inter.h
-	$(CC) -c $(CFLAGS) ./src/libpath.c -o ./src/libpath.o $(LDFLAGS) $(LDLIBS)
+tests/compile: tests/compile.c tests/common.h $(OBJS)
+	$(CC) tests/compile.c -o tests/compile $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+
+src/libpath.o: src/libpath.c src/libpath.h src/lp_inter.h
+	$(CC) -c $(CFLAGS) src/libpath.c -o src/libpath.o
+
+src/path.o: src/path.c src/libpath.h src/lp_inter.h
+	$(CC) -c $(CFLAGS) src/path.c -o src/path.o
 
 libpath.so: $(OBJS)
 	$(CC) $(OBJS) -shared -o libpath.so

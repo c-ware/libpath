@@ -36,29 +36,22 @@
 */
 
 /*
- * Internal declarations, macros, and inclusions for libpath.
+ * API for portable path construction. The way that libpath handles the
+ * construction of paths in a portable way is by using a sort of format
+ * independent version of the paths, where the programmer gives a tag that
+ * describes what the component is. The component is then compiled into
+ * the platform's path format.
 */
 
-#ifndef CWARE_LIBCWPATH_INTERNAL_H
-#define CWARE_LIBCWPATH_INTERNAL_H
+#include "libpath.h"
+#include "lp_inter.h"
 
-/* Internal inclusions-- feel free to modify these as long as they
- * point to the same library */
-#include "carray/carray.h"
-#include "liberror/liberror.h"
+struct LibpathPath *libpath_path_init(void) {
+    struct LibpathPath *new_path = carray_init(new_path, PATH_COMPONENT);
 
-/* Useful macros */
-#define INIT_VARIABLE(variable) \
-    memset(&(variable), 0, sizeof((variable)))
+    return new_path;
+}
 
-/* Data structure properties */
-#define FILE_TYPE           struct LibpathFile
-#define FILE_HEAP           1
-#define FILE_FREE(value)
-
-#define PATH_COMPONENT_TYPE   struct LibpathPathComponent
-#define PATH_COMPONENT_HEAP   1
-#define PATH_COMPONENT_FREE(value)
-
-
-#endif
+void libpath_path_free(struct LibpathPath *path) {
+    carray_free(path, PATH_COMPONENT);
+}

@@ -54,13 +54,13 @@
 #include <dos.h>
 #endif
 
-#if defined(__unix__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <dirent.h>
 #endif
 
 /* Inclusions for the stat system call, or any equivalent
  * of it */
-#if defined(_MSDOS) || defined(_WIN32) || defined(__unix__)
+#if defined(_MSDOS) || defined(_WIN32) || defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <sys/stat.h>
 #endif
 
@@ -70,7 +70,7 @@
 #include <direct.h>
 #endif
 
-#if defined(__unix__) || defined(_WIN32)
+#if defined(__unix__) || defined(_WIN32) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
@@ -142,7 +142,7 @@ int libpath_mkdir(const char *path, int mode) {
     return mkdir(path);
 #endif
 
-#if defined(__unix__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
     return mkdir(path, mode);
 #endif
 }
@@ -239,7 +239,7 @@ static int matches_glob(const char *name, const char *pattern) {
     return 1;
 }
 
-#if defined(__unix__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     DIR *directory = NULL;
     struct dirent *entry = NULL;

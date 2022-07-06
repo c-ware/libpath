@@ -1,0 +1,56 @@
+.TH "libpath_path_init" "cware" "July 06, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_init - initialize a new platform independent path
+.SH SYNOPSIS
+.B "#include ""libpath.h"""
+.br
+
+\fBstruct LibpathPath * libpath_path_init(void);
+.br
+
+\fR
+.SH DESCRIPTION
+This function will initialize a new platform independent path that
+will be compiled into the platform's required path.
+
+This function has no error conditions.
+.br
+
+This function has no parameters.
+.SH RETURN VALUE
+This function will return a new path object
+.SH NOTES
+This function has no notes.
+.SH EXAMPLES
+#include <stdio.h>
+.br
+#include <errno.h>
+.br
+#include <stdlib.h>
+.br
+#include <string.h>
+.br
+
+.br
+#include "libpath.h"
+.br
+
+.br
+int main(void) {
+.br
+    int index = 0;
+.br
+    struct LibpathPath *path = libpath_path_init();
+.br
+
+.br
+    libpath_path_free(path);
+.br
+
+.br
+    return 0;
+.br
+}
+.br
+.SH SEE ALSO
+This function has no references.

@@ -85,7 +85,7 @@
 #define LIBPATH_MAX_PATH    4096
 #endif
 
-#if defined(ultrix) || defined(__FreeBSD__) || defined(__OpenBSD__) ||  defined(__sun)
+#if defined(ultrix) || defined(__FreeBSD__) || defined(__OpenBSD__) ||  defined(__sun) || defined(__APPLE__) || defined(__CW_UNIXWARE__)
 #define LIBPATH_MAX_PATH    1024
 #endif
 
@@ -98,7 +98,7 @@
  * Thankfully, most operating systems are either Windows, UNIX, or a
  * *NIX like, so its not that big of a deal.
 */
-#if defined(__unix__)
+#if defined(__unix__) || defined(__APPLE__) || defined(__CW_UNIXWARE__)
 #define LIBPATH_SEPARATOR   "/"
 #endif
 
@@ -111,32 +111,45 @@
  * purely for the sake of future proofing, as another operating system
  * may not have the same return code.
 */
-#if defined(__unix__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || defined(_MSDOS) || defined(_WIN32)
 #define LIBPATH_FAILURE -1
 #endif
-
-#if defined(_MSDOS) || defined(_WIN32)
-#define LIBPATH_FAILURE -1
-#endif
-
 
 /*
  * The constant that represents a 'successful' path operation. This exists
  * purely for the sake of future proofing, as another operating system
  * may not have the same return code.
 */
-#if defined(__unix__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || defined(_MSDOS) || defined(_WIN32)
 #define LIBPATH_SUCCESS 0
 #endif
 
-#if defined(_MSDOS) || defined(_WIN32)
-#define LIBPATH_SUCCESS 0
-#endif
-
+/*
+ * @docgen: structure
+ * @brief: a file on the filesystem
+ * @name: LibpathFile
+ *
+ * @field path: the path to the file
+ * @type: char *
+*/
 struct LibpathFile {
     char path[LIBPATH_GLOB_PATH_LENGTH + 1];
 };
 
+/*
+ * @docgen: structure
+ * @brief: an array of files
+ * @name: LibpathFiles
+ *
+ * @field length: the length of the array
+ * @type: int
+ *
+ * @field capacity: the capacity of the array
+ * @type: int
+ *
+ * @field contents: the files in the array
+ * @type: struct LibpathFile
+*/
 struct LibpathFiles {
     int length;
     int capacity;
@@ -182,12 +195,16 @@ struct LibpathFiles {
  * @return: the number of bytes written
  * @type: int
 */
+/*
 #if defined(__GNUC__)
 int libpath_join_path(char *buffer, int length, ...)
     __attribute__((sentinel(0)));
 #else
+*/
 int libpath_join_path(char *buffer, int length, ...);
+/*
 #endif
+*/
 
 /*
  * @docgen: function
@@ -414,6 +431,123 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern);
 */
 void libpath_free_glob(struct LibpathFiles files);
 
+/*
+ * PATH CREATION API
+*/
 
+/*
+ * @docgen: structure
+ * @brief: a component in a path
+ * @name: LibpathPathComponent
+ *
+ * @field component: the component name
+ * @type: const char *
+ *
+ * @field type: the type of component
+ * @type: int
+*/
+struct LibpathPathComponent {
+    const char *component;
+    int type;
+};
+
+/*
+ * @docgen: structure
+ * @brief: platform independent path representation
+ * @name: LibpathPath
+ *
+ * @field length: the length of the array
+ * @type: int
+ *
+ * @field capacity: the capacity of the array
+ * @type: int
+ *
+ * @field contents: the components in the array
+ * @type: LibpathPathComponent *
+*/
+struct LibpathPath {
+    int length;
+    int capacity;
+    struct LibpathPathComponent *contents;
+};
+
+/*
+ * @docgen: function
+ * @brief: initialize a new platform independent path
+ * @name: libpath_path_init
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will initialize a new platform independent path that
+ * @will be compiled into the platform's required path.
+ * @description
+ *
+ * @example
+ * @#include <stdio.h>
+ * @#include <errno.h>
+ * @#include <stdlib.h>
+ * @#include <string.h>
+ * @
+ * @#include "libpath.h"
+ * @
+ * @int main(void) {
+ * @    int index = 0;
+ * @    struct LibpathPath *path = libpath_path_init();
+ * @
+ * @    libpath_path_free(path);
+ * @
+ * @    return 0;
+ * @}
+ * @example
+ *
+ * @return: a new path object
+ * @type: struct LibpathPath *
+*/
+struct LibpathPath *libpath_path_init(void);
+
+/*
+ * @docgen: function
+ * @brief: release a path structure
+ * @name: libpath_path_free
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will release a path structure from memory
+ * @description
+ *
+ * @example
+ * @#include <stdio.h>
+ * @#include <errno.h>
+ * @#include <stdlib.h>
+ * @#include <string.h>
+ * @
+ * @#include "libpath.h"
+ * @
+ * @int main(void) {
+ * @    int index = 0;
+ * @    struct LibpathPath *path = libpath_path_init();
+ * @
+ * @    libpath_path_free(path);
+ * @
+ * @    return 0;
+ * @}
+ * @example
+ *
+ * @return: a new path object
+ * @type: struct LibpathPath *
+*/
+void libpath_path_free(struct LibpathPath *path);
 
 #endif
+
+
+
+
+
+
+
+
+
+
