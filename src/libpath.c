@@ -54,6 +54,13 @@
 #include <dos.h>
 #endif
 
+
+/* Windows uses the FindFirstFile, and FindNextFile API
+ * to do basic directory searching. */
+#if defined(_WIN32)
+#include <dos.h>
+#endif
+
 #if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <dirent.h>
 #endif
@@ -70,7 +77,7 @@
 #include <direct.h>
 #endif
 
-#if defined(__unix__) || defined(_WIN32) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
+#if defined(__unix__) | defined(_WIN32) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
@@ -268,6 +275,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         if(matches_glob(entry->d_name, pattern) == 0)
             continue;
 
+        /* The path is too big. Yell at the user. */
         if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
                              entry->d_name, NULL) >= LIBPATH_GLOB_PATH_LENGTH) {
             liberror_unhandled(libpath_glob);
@@ -277,6 +285,77 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     }
 
     closedir(directory);
+
+    return globbed_files;
+}
+#endif
+
+#if defined(_WIN32)
+struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
+    struct LibpathFiles globbed_files;
+    char glob_path[LIBPATH_GLOB_PATH_LENGTH + 1] = "";
+    
+    /* Windows API data for files (dumb typedefs @_@) */
+    BOOL found_file = TRUE;
+    WIN32_FIND_DATA file_data;
+    HANDLE file_response = NULL;
+ 
+    INIT_VARIABLE(node);
+    INIT_VARIABLE(file_Data);
+    INIT_VARIABLE(globbed_files);
+
+    /* Rather than use the base carray initialization logic, we do
+     * our own initialization because carray has no way to initialize
+     * a stack structure but with a heap contents field. */
+    globbed_files.length = 0;
+    globbed_files.capacity = 5;
+    globbed_files.contents = malloc(sizeof(struct LibpathFile) * 5);
+
+    /* Build the path to the glob. */
+    if(libpath_join_path(glob_path, LIBPATH_GLOB_PATH_LENGTH, path, "*.*",
+                         NULL) >= LIBPATH_GLOB_PATH_LENGTH) {
+        fprintf(stderr, "libpath_glob: could not glob path '%s': glob path full\n", glob_path);
+        exit(EXIT_FAILURE);
+    }
+
+    /* Begin node iteration */
+    file_response = FindFirstFile("*.*", &file_data);
+
+    /* If the response object still NULL, the file could not be found.
+     * Otherwise, handle the got path, and get the next one until we
+     * have exhausted everything. */
+    if(file_response == NULL) {
+        fprintf(stderr, "libpath_glob: failed to glob path '%s' (%s)\n", glob_path,
+                strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    while(found_file == TRUE) {
+        struct LibpathFile new_path;
+
+        /* No thanks */
+        if(strcmp(file_data.cFileName, ".") == 0 || strcmp(file_data.cFileName, "..") == 0) {
+            found_file = FindNextFile(file_response, &file_data);
+
+            continue;
+        }
+
+        /* This path does not match the glob pattern-- ignore it */
+        if(matches_glob(found_file.cFileName, pattern) == 0)  {
+            found_file = FindNextFile(file_response, &file_data);
+
+            continue;
+        }
+
+        /* The path is too big. Yell at the user. */
+        if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
+                             node.name, NULL) >= LIBPATH_GLOB_PATH_LENGTH)
+            liberror_unhandled(libpath_glob);
+
+        /* This is a valid file. Now, get the next. */
+        carray_append(&globbed_files, new_path, FILE);
+        found_file = FindNextFile(file_response, &file_data);
+    }
 
     return globbed_files;
 }

@@ -1,4 +1,4 @@
-.TH "libpath_rmdir" "cware" "July 06, 2022" "" "C-Ware Manuals"
+.TH "libpath_rmdir" "cware" "July 07, 2022" "" "C-Ware Manuals"
 .SH NAME
 libpath_rmdir - remove a directory
 .SH SYNOPSIS
