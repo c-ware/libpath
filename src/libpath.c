@@ -300,8 +300,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     WIN32_FIND_DATA file_data;
     HANDLE file_response = NULL;
  
-    INIT_VARIABLE(node);
-    INIT_VARIABLE(file_Data);
+    INIT_VARIABLE(file_data);
     INIT_VARIABLE(globbed_files);
 
     /* Rather than use the base carray initialization logic, we do
@@ -341,7 +340,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         }
 
         /* This path does not match the glob pattern-- ignore it */
-        if(matches_glob(found_file.cFileName, pattern) == 0)  {
+        if(matches_glob(file_data.cFileName, pattern) == 0)  {
             found_file = FindNextFile(file_response, &file_data);
 
             continue;
