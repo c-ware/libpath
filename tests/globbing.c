@@ -19,18 +19,24 @@ void dump_match(const char *pattern, struct LibpathFiles files) {
 void assert_matched(const char *path, const char *pattern, int length) {
     struct LibpathFiles globbed_files = libpath_glob(path, pattern);
 
+    printf("Files globbed: %i\n", globbed_files.length);
     assert(globbed_files.length == length);
 
     libpath_free_glob(globbed_files);
 }
 
 int main(void) {
+    printf("%s", "_\n");
     assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.h", 3);
+    printf("%s", "A\n");
+
     assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.*", 10);
+    printf("%s", "B\n");
 
     /* There are three files with the cpp prefix. Make sure globbing
      * does not count them even though they might match PART prefix */
     assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.c", 0);
+    printf("%s", "C\n");
 
     /* Should match both cxx and cpp files */
     assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.c*", 7);
