@@ -22,6 +22,8 @@ check:
 .c.obj:
 	$(CC) /Fo$@ /c $<
 
+#$(CC) /Fo$*.obj /c $<
+#$(LINKER) $(OBJS) $*.obj
+
 .c.exe:
-	$(CC) /Fo$*.obj /c $<
-	$(LINKER) $(OBJS) $*.obj
+	echo $< to $@

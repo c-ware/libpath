@@ -73,7 +73,7 @@
 
 /* Inclusions for file system operations like making and
  * removing directories */
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(_WIN32)
 #include <direct.h>
 #endif
 
@@ -143,6 +143,12 @@ int libpath_rmdir(const char *path) {
 int libpath_mkdir(const char *path, int mode) {
 #if defined(_MSDOS)
     return mkdir(path);
+#endif
+
+/* Microsoft is dumb and deprecated mkdir for _mkdir. See:
+   https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/mkdir?view=msvc-169 */
+#if defined(_WIN32)
+    return _mkdir(path);
 #endif
 
 #if defined(__WATCOMC__)
