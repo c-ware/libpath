@@ -24,4 +24,4 @@ check:
 
 .c.exe:
 	$(CC) /Fo$*.obj /c $<
-	$(LINKER) $(OBJS) $*.obj,$@,nul.map,,nul.def
+	$(LINKER) $(OBJS) $*.obj

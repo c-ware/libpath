@@ -348,7 +348,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
 
         /* The path is too big. Yell at the user. */
         if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
-                             node.name, NULL) >= LIBPATH_GLOB_PATH_LENGTH)
+                             file_data.cFileName, NULL) >= LIBPATH_GLOB_PATH_LENGTH)
             liberror_unhandled(libpath_glob);
 
         /* This is a valid file. Now, get the next. */
