@@ -324,7 +324,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     }
 
     /* Begin node iteration */
-    file_response = FindFirstFile("*.*", &file_data);
+    file_response = FindFirstFile(glob_path, &file_data);
 
     /* If the response object still NULL, the file could not be found.
      * Otherwise, handle the got path, and get the next one until we
@@ -335,6 +335,9 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         exit(EXIT_FAILURE);
     }
 
+    /* By default, if we get to this point, we know that the first
+       file was found, so we assume it to be true that the first
+       file was found (because it.. was found) */
     while(found_file == TRUE) {
         struct LibpathFile new_path;
 
@@ -361,6 +364,8 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         carray_append(&globbed_files, new_path, FILE);
         found_file = FindNextFile(file_response, &file_data);
     }
+
+    FindClose(file_response);
 
     return globbed_files;
 }
