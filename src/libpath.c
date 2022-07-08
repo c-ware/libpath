@@ -58,7 +58,7 @@
 /* Windows uses the FindFirstFile, and FindNextFile API
  * to do basic directory searching. */
 #if defined(_WIN32)
-#include <dos.h>
+#include <windows.h>
 #endif
 
 #if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
@@ -77,7 +77,7 @@
 #include <direct.h>
 #endif
 
-#if defined(__unix__) | defined(_WIN32) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
