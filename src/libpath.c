@@ -61,19 +61,24 @@
 #include <dos.h>
 #endif
 
+/* OS/2 uses the same interface as DOS. Literally. */
+#if defined(__OS2__)
+#include <dos.h>
+#endif
+
 #if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <dirent.h>
 #endif
 
 /* Inclusions for the stat system call, or any equivalent
  * of it */
-#if defined(_MSDOS) || defined(_WIN32) || defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
+#if defined(_MSDOS) || defined(_WIN32) || defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || defined(__OS2__)
 #include <sys/stat.h>
 #endif
 
 /* Inclusions for file system operations like making and
  * removing directories */
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(__OS2__)
 #include <direct.h>
 #endif
 
@@ -141,7 +146,7 @@ int libpath_rmdir(const char *path) {
 }
 
 int libpath_mkdir(const char *path, int mode) {
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(__OS2__)
     return mkdir(path);
 #endif
 
@@ -191,7 +196,7 @@ static int matches_glob(const char *name, const char *pattern) {
                 break;
             }
 
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(__OS2__)
             if(toupper(pattern[pattern_cursor]) == toupper(name[name_cursor])) {
                 name_cursor++;
                 pattern_cursor++;
@@ -224,7 +229,7 @@ static int matches_glob(const char *name, const char *pattern) {
          * as name[name_cursor] will be on the NUL byte. This section
          * will essentially just exhaust the wildcard.
         */
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(__OS2__)
         while(toupper(name[name_cursor]) != toupper(stop_char) && toupper(name[name_cursor]) != '\0')
             name_cursor++;
 #else
@@ -233,7 +238,7 @@ static int matches_glob(const char *name, const char *pattern) {
 #endif
 
         /* Name exhausted before the path */
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(__OS2__)
         if(toupper(name[name_cursor]) == '\0' && toupper(pattern[pattern_cursor]) != '\0')
             return 0;
 #else
@@ -361,7 +366,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
 }
 #endif
 
-#if defined(_MSDOS)
+#if defined(_MSDOS) || defined(__OS2__)
 struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     int status = -1;
     struct _find_t node;

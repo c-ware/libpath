@@ -61,7 +61,7 @@
 #ifndef CWARE_LIBCWPATH_H
 #define CWARE_LIBCWPATH_H
 
-#define CWARE_LIBCWPATH_VERSION  "1.0.1"
+#define CWARE_LIBCWPATH_VERSION  "1.0.2"
 
 /* Limits */
 #define LIBPATH_GLOB_PATH_LENGTH    256 + 1
@@ -73,19 +73,20 @@
  * actual path length should be LIBPATH_MAX_PATH + 1, where the + 1
  * is for the NUL byte.
 */
-#ifdef _MSDOS
+#if defined(_MSDOS)
 #define LIBPATH_MAX_PATH    65
 #endif
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__OS2__)
 #define LIBPATH_MAX_PATH    260
 #endif
 
-#ifdef __linux__
+#if defined(__linux__)
 #define LIBPATH_MAX_PATH    4096
 #endif
 
-#if defined(ultrix) || defined(__FreeBSD__) || defined(__OpenBSD__) ||  defined(__sun) || defined(__APPLE__) || defined(__CW_UNIXWARE__)
+#if defined(ultrix) || defined(__FreeBSD__) || defined(__OpenBSD__) || \
+    defined(__sun)  || defined(__APPLE__)   || defined(__CW_UNIXWARE__)
 #define LIBPATH_MAX_PATH    1024
 #endif
 
@@ -102,7 +103,7 @@
 #define LIBPATH_SEPARATOR   "/"
 #endif
 
-#if defined(_MSDOS) || defined(_WIN32)
+#if defined(_MSDOS) || defined(_WIN32) || defined(__OS2__)
 #define LIBPATH_SEPARATOR   "\\"
 #endif
 
@@ -111,7 +112,8 @@
  * purely for the sake of future proofing, as another operating system
  * may not have the same return code.
 */
-#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || defined(_MSDOS) || defined(_WIN32)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || \
+    defined(_MSDOS)   || defined(_WIN32) || defined(__OS2__)
 #define LIBPATH_FAILURE -1
 #endif
 
@@ -120,7 +122,8 @@
  * purely for the sake of future proofing, as another operating system
  * may not have the same return code.
 */
-#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || defined(_MSDOS) || defined(_WIN32)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__) || \
+    defined(_MSDOS)   || defined(_WIN32)          || defined(__OS2__)
 #define LIBPATH_SUCCESS 0
 #endif
 
