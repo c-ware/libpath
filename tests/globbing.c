@@ -26,6 +26,7 @@ void assert_matched(const char *path, const char *pattern, int length) {
 
 int main(void) {
     assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.h", 3);
+
     assert_matched("tests" LIBPATH_SEPARATOR "assets", "*.*", 10);
 
     /* There are three files with the cpp prefix. Make sure globbing

@@ -58,7 +58,7 @@
 /* Windows uses the FindFirstFile, and FindNextFile API
  * to do basic directory searching. */
 #if defined(_WIN32)
-#include <dos.h>
+#include <windows.h>
 #endif
 
 /* OS/2 uses the same interface as DOS. Literally. */
@@ -78,11 +78,11 @@
 
 /* Inclusions for file system operations like making and
  * removing directories */
-#if defined(_MSDOS) || defined(__OS2__)
+#if defined(_MSDOS) || defined(_WIN32) || defined(__OS2__)
 #include <direct.h>
 #endif
 
-#if defined(__unix__) | defined(_WIN32) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
+#if defined(__unix__) || defined(__CW_UNIXWARE__) || defined(__APPLE__)
 #include <unistd.h>
 #endif
 
@@ -148,6 +148,12 @@ int libpath_rmdir(const char *path) {
 int libpath_mkdir(const char *path, int mode) {
 #if defined(_MSDOS) || defined(__OS2__)
     return mkdir(path);
+#endif
+
+/* Microsoft is dumb and deprecated mkdir for _mkdir. See:
+   https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/mkdir?view=msvc-169 */
+#if defined(_WIN32)
+    return _mkdir(path);
 #endif
 
 #if defined(__WATCOMC__)
@@ -305,8 +311,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     WIN32_FIND_DATA file_data;
     HANDLE file_response = NULL;
  
-    INIT_VARIABLE(node);
-    INIT_VARIABLE(file_Data);
+    INIT_VARIABLE(file_data);
     INIT_VARIABLE(globbed_files);
 
     /* Rather than use the base carray initialization logic, we do
@@ -324,7 +329,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
     }
 
     /* Begin node iteration */
-    file_response = FindFirstFile("*.*", &file_data);
+    file_response = FindFirstFile(glob_path, &file_data);
 
     /* If the response object still NULL, the file could not be found.
      * Otherwise, handle the got path, and get the next one until we
@@ -335,6 +340,9 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         exit(EXIT_FAILURE);
     }
 
+    /* By default, if we get to this point, we know that the first
+       file was found, so we assume it to be true that the first
+       file was found (because it.. was found) */
     while(found_file == TRUE) {
         struct LibpathFile new_path;
 
@@ -346,7 +354,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
         }
 
         /* This path does not match the glob pattern-- ignore it */
-        if(matches_glob(found_file.cFileName, pattern) == 0)  {
+        if(matches_glob(file_data.cFileName, pattern) == 0)  {
             found_file = FindNextFile(file_response, &file_data);
 
             continue;
@@ -354,13 +362,15 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
 
         /* The path is too big. Yell at the user. */
         if(libpath_join_path(new_path.path, LIBPATH_GLOB_PATH_LENGTH, path,
-                             node.name, NULL) >= LIBPATH_GLOB_PATH_LENGTH)
+                             file_data.cFileName, NULL) >= LIBPATH_GLOB_PATH_LENGTH)
             liberror_unhandled(libpath_glob);
 
         /* This is a valid file. Now, get the next. */
         carray_append(&globbed_files, new_path, FILE);
         found_file = FindNextFile(file_response, &file_data);
     }
+
+    FindClose(file_response);
 
     return globbed_files;
 }
