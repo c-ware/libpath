@@ -36,22 +36,15 @@
 */
 
 /*
- * API for portable path construction. The way that libpath handles the
- * construction of paths in a portable way is by using a sort of format
- * independent version of the paths, where the programmer gives a tag that
- * describes what the component is. The component is then compiled into
- * the platform's path format.
+ * This file contains functions used for iterating over directories in
+ * different forms, this file implements:
+ *
+ *  - Globbing
+ *  - Recursive globbing
+ *  - Flat Iteration
+ *  - Walking a directory tree
+ *
+ * All of these functions are built over basic, flat iteration. All other
+ * functions can be implemented using it, and such, it is the function which
+ * should have platform-dependent implementations.
 */
-
-#include "libpath.h"
-#include "lp_inter.h"
-
-struct LibpathPath *libpath_path_init(void) {
-    struct LibpathPath *new_path = carray_init(new_path, PATH_COMPONENT);
-
-    return new_path;
-}
-
-void libpath_path_free(struct LibpathPath *path) {
-    carray_free(path, PATH_COMPONENT);
-}

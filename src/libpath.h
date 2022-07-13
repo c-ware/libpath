@@ -127,6 +127,9 @@
 #define LIBPATH_SUCCESS 0
 #endif
 
+/* Enumerations for the difference types of components. */
+#define LIBPATH_COMPONENT_DRIVE 0
+
 /*
  * @docgen: structure
  * @brief: a file on the filesystem
@@ -396,7 +399,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern);
 /*
  * @docgen: function
  * @brief: release a glob from memory
- * @name: libpath_free_glob
+ * @name: libpath_glob_free
  *
  * @include: libpath.h
  *
@@ -423,7 +426,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern);
  * @        printf("Globbed file: '%s'\n", file.path);
  * @    }
  * @
- * @    libpath_free_glob(globbed_files);
+ * @    libpath_glob_free(globbed_files);
  * @
  * @    return 0;
  * @}
@@ -432,7 +435,7 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern);
  * @param files: the files to release
  * @type: struct LibpathFiles
 */
-void libpath_free_glob(struct LibpathFiles files);
+void libpath_glob_free(struct LibpathFiles files);
 
 /*
  * PATH CREATION API
@@ -538,19 +541,98 @@ struct LibpathPath *libpath_path_init(void);
  * @}
  * @example
  *
+ * @error: path is NULL
+ *
  * @return: a new path object
- * @type: struct LibpathPath *
+ * @type: struct LibpathPath
 */
 void libpath_path_free(struct LibpathPath *path);
 
+/*
+ * @docgen: function
+ * @brief: add a new component to the path
+ * @name: libpath_path_add_component
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @description
+ *
+ * @example
+ * @#include "libpath.h"
+ * @
+ * @int main(void) {
+ * @    char compiled_path[LIBPATH_MAX_PATH + 1] = "";
+ * @    struct LibpathFiles *files = NULL;
+ * @    struct LibpathPath *user_directory = libpath_path_init();
+ * @
+ * @    // MS-DOS and OS/2 are single-user, so this just expands to C:\
+ * @    // On a *NIX, this expands to /home/getenv("USER")
+ * @    // On NT, this expands to C:\Users\getenv("USERNAME")
+ * @    libpath_path_add_component(user_directory, LIBPATH_HOME, NULL);
+ * @
+ * @    // Compile the path into this platform's native path
+ * @    libpath_path_compile(user_directory, user_directory, LIBPATH_MAX_PATH);
+ * @
+ * @    // Glob all C source files
+ * @    libpath_glob(
+ * @
+ * @    libpath_path_free(user_directory);
+ * @}
+ * @example
+ *
+ * @error: path is NULL
+ * @error: name is NULL
+ * @error: component is less than zero
+ *
+ * @param path: the path to add to
+ * @type: struct LibpathPath *
+ *
+ * @param component: what type of path component is this
+ * @type: int
+ *
+ * @param name: the path contents to add
+ * @type: const char *
+*/
+void libpath_path_add_component(struct LibpathPath *path, int component, const char *name);
+
+/*
+ * @docgen: function
+ * @brief: add a new component to the path
+ * @name: libpath_path_add_component
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will compile the given path into the native path
+ * @representation of the current operating system. This is fundamentally
+ * @just a front end to the error checking, and compiler backends.
+ * @description
+ *
+ * @error: path is NULL
+ * @error: buffer is NULL
+ * @error: length is negative
+ *
+ * @param path: the path to compile
+ * @type: struct LibpathPath
+ *
+ * @param buffer: the buffer to write the path into
+ * @type: char *
+ *
+ * @param length: the maximum length of the buffer (including NUL)
+ * @type: int
+ *
+ * @return: the number of bytes written
+ * @type: int
+*/
+int libpath_path_compile(struct LibpathPath *path, char *buffer, int length);
+
+
+
+
+
+
+
+
+
 #endif
-
-
-
-
-
-
-
-
-
-

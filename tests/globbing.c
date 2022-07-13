@@ -21,7 +21,7 @@ void assert_matched(const char *path, const char *pattern, int length) {
 
     assert(globbed_files.length == length);
 
-    libpath_free_glob(globbed_files);
+    libpath_glob_free(globbed_files);
 }
 
 int main(void) {

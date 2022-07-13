@@ -4,8 +4,8 @@ HEADERS=src/lp_inter.h src/libpath.h src/compile/path.h src/carray/carray.h src/
 CC=cc
 PREFIX=/usr/local
 LDFLAGS=
-LDLIBS=
-CFLAGS=-fpic
+LDLIBS=-lm
+CFLAGS=-fpic -Wall -Wextra -Wpedantic -Wshadow -ansi -g -Wno-unused-parameter -Wno-type-limits -Wno-sign-compare
 
 all: $(OBJS) $(TESTS) libpath.so
 

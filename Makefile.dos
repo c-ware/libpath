@@ -4,7 +4,7 @@
 
 CC=cl
 LINKER=link
-OBJS=src\libpath.obj src\path.obj 
+OBJS=src\iter.obj src\libpath.obj src\compile\error.obj src\compile\backends\unix.obj src\compile\path.obj 
 TESTS=tests\joinpath.exe tests\mkdir.exe tests\globbing.exe tests\rmdir.exe tests\compile.exe 
 
 .SUFFIXES: .c .exe .obj

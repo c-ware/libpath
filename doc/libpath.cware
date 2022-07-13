@@ -1,4 +1,4 @@
-.TH "libpath" "cware" "July 07, 2022" "" "C-Ware Manuals"
+.TH "libpath" "cware" "July 13, 2022" "" "C-Ware Manuals"
 .SH NAME
 libpath - portably handle file system paths and operations
 .SH SYNOPSIS

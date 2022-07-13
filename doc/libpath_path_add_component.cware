@@ -1,0 +1,40 @@
+.TH "libpath_path_add_component" "cware" "July 13, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_add_component - add a new component to the path
+.SH SYNOPSIS
+.B "#include ""libpath.h"""
+.br
+
+\fBint libpath_path_add_component(struct LibpathPath \fIpath\fB, char *\fIbuffer\fB, int \fIlength\fB);
+.br
+
+\fR
+.SH DESCRIPTION
+This function will compile the given path into the native path
+representation of the current operating system. This is fundamentally
+just a front end to the error checking, and compiler backends.
+
+This function will display an error to the stderr, and abort the program if any of following conditions are met.
+.RS
+o    path is NULL
+.br
+o    buffer is NULL
+.br
+o    length is negative
+.br
+.RE
+
+\fIpath\fR will be the path to compile
+.br
+\fIbuffer\fR will be the buffer to write the path into
+.br
+\fIlength\fR will be the maximum length of the buffer (including NUL)
+.br
+.SH RETURN VALUE
+This function will return the number of bytes written
+.SH NOTES
+This function has no notes.
+.SH EXAMPLES
+This function has no examples.
+.SH SEE ALSO
+This function has no references.

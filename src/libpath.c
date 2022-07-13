@@ -442,6 +442,6 @@ struct LibpathFiles libpath_glob(const char *path, const char *pattern) {
 }
 #endif
 
-void libpath_free_glob(struct LibpathFiles files) {
+void libpath_glob_free(struct LibpathFiles files) {
     free(files.contents);
 }

@@ -1,7 +1,7 @@
 # CHANGELOG.md
 
 VERSION: 1.0.2
-DATE: July 10th, 2022
+DATE: July 11th, 2022
 
 # Features
 - OS/2 support for macros, and functions.
@@ -10,4 +10,4 @@ DATE: July 10th, 2022
 No misc. features.
 
 # Breaking Changes
-No breaking changes.
+- Changed `libpath_free_glob` to `libpath_glob_free`
