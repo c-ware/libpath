@@ -128,7 +128,9 @@
 #endif
 
 /* Enumerations for the difference types of components. */
-#define LIBPATH_COMPONENT_DRIVE 0
+#define LIBPATH_COMPONENT_DRIVE     0
+#define LIBPATH_COMPONENT_FILE      1
+#define LIBPATH_COMPONENT_DIRECTORY 2
 
 /*
  * @docgen: structure

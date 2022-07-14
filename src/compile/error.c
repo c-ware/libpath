@@ -63,3 +63,33 @@ void _libpath_drive_location(struct LibpathPath *path) {
     }
 }
 
+void _libpath_file_location(struct LibpathPath *path) {
+    int index = 0;
+    int found_file = 0;
+    int directory_after_file = 0;
+
+    liberror_is_null(_libpath_drive_location, path);
+
+    /* Record whether or not a directory component appears AFTER a
+     * file component. */
+    for(index = 0; index < carray_length(path); index++) {
+        struct LibpathPathComponent component = path->contents[index];
+
+        if(component.type == LIBPATH_COMPONENT_FILE) {
+            found_file = 1;
+
+            continue;
+        }
+
+        if(component.type != LIBPATH_COMPONENT_DIRECTORY)
+            continue;
+
+        /* No file has been found yet, so this directory is does not
+         * appear after one. We are OK. */
+        if(found_file == 0)
+            continue;
+
+        fprintf(stderr, "_libpath_file_location: directory '%s' appears after file\n", component.component);
+        exit(EXIT_FAILURE);
+    }
+}

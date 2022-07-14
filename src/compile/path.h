@@ -51,7 +51,9 @@ int _libpath_path_backend_unix(struct LibpathPath *path, char *buffer, int lengt
  *
  * @description
  * @This function will take a path that, if it contains a drive at any
- * @location other than the start, will produce an error.
+ * @location other than the start, will produce an error. This function
+ * @also doubles as verifying that there are not more than one drive in a
+ * @path.
  * @description
  *
  * @error: path is NULL
@@ -61,5 +63,31 @@ int _libpath_path_backend_unix(struct LibpathPath *path, char *buffer, int lengt
  * @type: struct LibpathPath
 */
 void _libpath_drive_location(struct LibpathPath *path);
+
+/*
+ * @docgen: function
+ * @brief: assert that the location of a file is appropriate
+ * @name: _libpath_file_location
+ *
+ * @description
+ * @This function will take a path that, and verify that if it has a file,
+ * @the file in the path is in an appropriate location in the path. An
+ * @appropriate location would be anywhere after the last directory if there
+ * @is a directory found.
+ * @description
+ *
+ * @notes
+ * @This function relies on the prior execution of _libpath_drive_location(cware),
+ * @as if a file appears before the location of a directory (if one exists in
+ * @the path), then it will be caught in that function.
+ * @notes
+ *
+ * @error: path is NULL
+ * @error: a file is found in an inappropriate location
+ *
+ * @param path: the path to check
+ * @type: struct LibpathPath
+*/
+void _libpath_file_location(struct LibpathPath *path);
 
 #endif

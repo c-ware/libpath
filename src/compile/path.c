@@ -81,8 +81,13 @@ void libpath_path_add_component(struct LibpathPath *path, int component, const c
 int libpath_path_compile(struct LibpathPath *path, char *buffer, int length) {
     int written = 0;
 
-    /* Error checking */
+    /* Error checking on this path. To anyone modifying
+     * this segment of the code, please remember that the
+     * order that these functions are called in DOES matter.
+     * Some error checking will rely on previous error
+     * checking to have been done. */
     _libpath_drive_location(path);
+    _libpath_file_location(path);
 
     written = _libpath_path_backend_unix(path, buffer, length);
 
