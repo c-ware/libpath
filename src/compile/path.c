@@ -88,6 +88,8 @@ int libpath_path_compile(struct LibpathPath *path, char *buffer, int length) {
      * checking to have been done. */
     _libpath_drive_location(path);
     _libpath_file_location(path);
+    _libpath_root_location(path);
+    _libpath_root_count(path);
 
     written = _libpath_path_backend_unix(path, buffer, length);
 

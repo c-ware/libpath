@@ -101,6 +101,27 @@ void _libpath_root_location(struct LibpathPath *path) {
     exit(EXIT_FAILURE);
 }
 
+void _libpath_root_count(struct LibpathPath *path) {
+    int index = 0;
+    int count = 0;
+
+    /* Count the number of roots */
+    for(index = 0; index < carray_length(path); index++) {
+        if(path->contents[index].type != LIBPATH_COMPONENT_ROOT)
+            continue;
+
+        count++;
+    }
+
+    /* More than 1 count is illegal, but 1 or 0 is OK. */
+    if(count <= 1)
+        break;
+
+    fprintf(stderr, "%s", "_libpath_root_count: multiple root components "
+            " detected in the path\n");
+    exit(EXIT_FAILURE);
+}
+
 void _libpath_file_location(struct LibpathPath *path) {
     int index = 0;
     int found_file = 0;

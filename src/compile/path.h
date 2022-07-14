@@ -66,6 +66,48 @@ void _libpath_drive_location(struct LibpathPath *path);
 
 /*
  * @docgen: function
+ * @brief: assert that the root is at the start, or followed by a drive
+ * @name: _libpath_root_location
+ *
+ * @description
+ * @This function will take a path that, if it contains a root at any
+ * @point in its contents, will assert that the root is either at the
+ * @start of the path, or is immediately before a drive.
+ * @description
+ *
+ * @notes
+ * @This function relies on the assertion of the drive's location by the
+ * @_libpath_drive_location(cware) function, so it must be called before it.
+ * @notes
+ *
+ * @error: path is NULL
+ * @error: root is not at the start, or not preceeded by a drive.
+ *
+ * @param path: the path to check
+ * @type: struct LibpathPath
+*/
+void _libpath_root_location(struct LibpathPath *path);
+
+/*
+ * @docgen: function
+ * @brief: assert that there is only 1, or 0 roots
+ * @name:_libpath_root_count
+ *
+ * @description
+ * @This function will take a path, and assert that its contents contains a
+ * @maximum of a single root component.
+ * @description
+ *
+ * @error: path is NULL
+ * @error: there is more than one root in a path
+ *
+ * @param path: the path to check
+ * @type: struct LibpathPath
+*/
+void _libpath_root_count(struct LibpathPath *path);
+
+/*
+ * @docgen: function
  * @brief: assert that the location of a file is appropriate
  * @name: _libpath_file_location
  *
