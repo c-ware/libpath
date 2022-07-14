@@ -37,12 +37,111 @@
 
 /*
  * The backend for producing UNIX paths.
+ *
+ * So to note, UNIX's path structure has NO concept of a 'drive' unlike
+ * MS-DOS, OS/2, Windows, and VMS. Because of this, these components are
+ * quite literally ignored.
+ *
+ * UNIX paths are probably the simplest of all of them, as on their own they
+ * are fairly barebones. This allows us to do what is essentially a blind
+ * pass translation without having to check what the next or previous component
+ * in the list is. Mostly, at least.
 */
 
 #include <stdio.h>
+#include <string.h>
 
 #include "../path.h"
+#include "../../libpath.h"
+#include "../../lp_inter.h"
 
 int _libpath_path_backend_unix(struct LibpathPath *path, char *buffer, int length) {
-    printf("Running..\n"); 
+    int index = 0;
+    int written = 0;
+
+    liberror_is_null(_libpath_path_backend_unix, path);
+    liberror_is_null(_libpath_path_backend_unix, buffer);
+    liberror_is_negative(_libpath_path_backend_unix, length);
+
+    LIBPATH_ERROR_CHECK(path);
+
+    /* Reset the buffer so strncat does not try adding onto the end
+     * of a potentially old or an uninitialized buffer (grumble grumble). */
+    buffer[0] = '\0';
+
+    for(index = 0; index < carray_length(path); index++) {
+        int component_length = 0;
+        struct LibpathPathComponent component = path->contents[index];
+
+        /* Remember: UNIX paths have no clue what a 'drive' is! Drives are
+         * mounted in-tree. */
+        if(component.type == LIBPATH_COMPONENT_DRIVE)
+            continue;
+
+        /* Determine the length of the component and make sure the path
+         * will not go out of bounds with it added..
+         *
+         * Remember, length in this context does not include the NUL byte.
+         * We should also remember that the + 1 for directories is for that
+         * path separator, which is only added if we are not at the end of
+         * the path. */
+        switch(component.type) {
+            case LIBPATH_COMPONENT_ROOT:
+                component_length = 1; break;
+
+            case LIBPATH_COMPONENT_DIRECTORY:
+                component_length = strlen(component.component);
+
+                /* Make sure to include a '/' in the final path
+                 * if we are not at the end of the path! */
+                if((index + 1) == carray_length(path))
+                    component_length += 1;
+
+                break;
+
+            case LIBPATH_COMPONENT_FILE:
+                component_length = strlen(component.component);
+                break;
+        }
+
+        if((written + component_length) > length)
+            return written;
+
+        /* Determine what to write!! */
+        switch(component.type) {
+            case LIBPATH_COMPONENT_ROOT:
+                strncat(buffer, "/", length - written);
+
+                written += 1;
+
+                break;
+
+            case LIBPATH_COMPONENT_DIRECTORY:
+                strncat(buffer, component.component, length - written);
+
+                /* Make sure to include a '/' in the final path
+                 * if we are not at the end of the path! */
+                if((index + 1) < carray_length(path)) {
+                    strncat(buffer, "/", length - written - 1);
+
+                    written += 1;
+                }
+
+
+                written += component_length;
+
+                break;
+
+            case LIBPATH_COMPONENT_FILE:
+                strncat(buffer, component.component, length - written);
+
+                written += component_length;
+
+                break;
+        }
+    }
+
+    buffer[written] = '\0';
+
+    return written;
 }

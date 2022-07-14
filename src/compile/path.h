@@ -38,6 +38,27 @@
 #ifndef CWARE_LIBPATH_PATH_H
 #define CWARE_LIBPATH_PATH_H
 
+/*
+ * @docgen: macro_function
+ * @brief: perform all error checks on a path
+ * 
+ * @include: libpath.h
+ *
+ * @description
+ * @This macro function is fairly simple. All it does is run all of the 
+ * @error checking functions on a path. Useful when you are directly
+ * @invoking the backends for path compilation, so you can still do runtime
+ * @error checking.
+ * @description
+ * 
+ * @param path: the path to perform error checks on
+*/
+#define LIBPATH_ERROR_CHECK(path)   \
+    _libpath_drive_location(path);  \
+    _libpath_file_location(path);   \
+    _libpath_root_location(path);   \
+    _libpath_root_count(path);
+
 struct LibpathPath;
 
 int _libpath_path_backend_unix(struct LibpathPath *path, char *buffer, int length);

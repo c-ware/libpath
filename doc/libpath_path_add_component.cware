@@ -28,12 +28,15 @@ o    length is negative
 .br
 \fIbuffer\fR will be the buffer to write the path into
 .br
-\fIlength\fR will be the maximum length of the buffer (including NUL)
+\fIlength\fR will be the maximum length of the buffer (without the NUL byte)
 .br
 .SH RETURN VALUE
 This function will return the number of bytes written
 .SH NOTES
-This function has no notes.
+If the length of a component will exceed the maximum capacitty of the
+buffer when added, the component will not be added and the backend
+chosen will return the length of the buffer without the next component.
+
 .SH EXAMPLES
 This function has no examples.
 .SH SEE ALSO

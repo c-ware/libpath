@@ -594,7 +594,7 @@ void libpath_path_free(struct LibpathPath *path);
  * @param component: what type of path component is this
  * @type: int
  *
- * @param name: the path contents to add
+ * @param name: the path contents to add ("" if there is none, like root)
  * @type: const char *
 */
 void libpath_path_add_component(struct LibpathPath *path, int component, const char *name);
@@ -612,6 +612,12 @@ void libpath_path_add_component(struct LibpathPath *path, int component, const c
  * @just a front end to the error checking, and compiler backends.
  * @description
  *
+ * @notes
+ * @If the length of a component will exceed the maximum capacitty of the
+ * @buffer when added, the component will not be added and the backend
+ * @chosen will return the length of the buffer without the next component.
+ * @notes
+ *
  * @error: path is NULL
  * @error: buffer is NULL
  * @error: length is negative
@@ -622,7 +628,7 @@ void libpath_path_add_component(struct LibpathPath *path, int component, const c
  * @param buffer: the buffer to write the path into
  * @type: char *
  *
- * @param length: the maximum length of the buffer (including NUL)
+ * @param length: the maximum length of the buffer (without the NUL byte)
  * @type: int
  *
  * @return: the number of bytes written

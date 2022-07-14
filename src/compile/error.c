@@ -115,7 +115,7 @@ void _libpath_root_count(struct LibpathPath *path) {
 
     /* More than 1 count is illegal, but 1 or 0 is OK. */
     if(count <= 1)
-        break;
+        return;
 
     fprintf(stderr, "%s", "_libpath_root_count: multiple root components "
             " detected in the path\n");
@@ -125,7 +125,6 @@ void _libpath_root_count(struct LibpathPath *path) {
 void _libpath_file_location(struct LibpathPath *path) {
     int index = 0;
     int found_file = 0;
-    int directory_after_file = 0;
 
     liberror_is_null(_libpath_drive_location, path);
 

@@ -1,32 +1,95 @@
 /*
- * Tests for compiling paths.
+ * Tests for compiling paths. Specifically, try a bunch of UNIX paths for now.
 */
 
 #include "../common.h"
 
 int main(void) {
-    char buffer[2048 + 1] = "";
+    char buffer[1024 + 1];
     struct LibpathPath *new_path = libpath_path_init();
 
-    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DRIVE, "foo");
-    assert(strcmp(new_path->contents[0].component, "foo") == 0);
-    assert(new_path->contents[0].type == LIBPATH_COMPONENT_DRIVE);
-    assert(new_path->length == 1);
-    
-    libpath_path_add_component(new_path, LIBPATH_COMPONENT_FILE, "bar");
-    assert(strcmp(new_path->contents[1].component, "bar") == 0);
-    assert(new_path->contents[1].type == LIBPATH_COMPONENT_FILE);
-    assert(new_path->length == 2);
+    /* Drive should literally not affect the final product. If it does,
+     * we got a problem. */
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DRIVE, "C:");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_ROOT, "");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "foo");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "bar");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_FILE, "baz.txt");
 
-    /* This is creates an invalid path (directories cannot come after files) */
-    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "baz");
-    assert(strcmp(new_path->contents[2].component, "baz") == 0);
-    assert(new_path->contents[2].type == LIBPATH_COMPONENT_DIRECTORY);
-    assert(new_path->length == 3);
-
-    libpath_path_compile(new_path, buffer, 2048);
-
+    /* Build the path, release the original structure, and make sure
+     * final path is correct. */
+    libpath_path_compile(new_path, buffer, 1024);
     libpath_path_free(new_path);
+    assert(strcmp(buffer, "/foo/bar/baz.txt") == 0);
+
+    /* Now.. do we get the same result if we REMOVE drive? What this is
+     * testing is if the behavior is somehow linked to the presence of the
+     * drive. */
+    new_path = libpath_path_init();
+
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_ROOT, "");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "foo");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "bar");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_FILE, "baz.txt");
+
+    libpath_path_compile(new_path, buffer, 1024);
+    libpath_path_free(new_path);
+    assert(strcmp(buffer, "/foo/bar/baz.txt") == 0);
+
+    /* Awesome. So far so god. That being said, paths on UNIX do not
+     * need a root directory inside of them. Paths without a root directory
+     * in them will actually be treated as if they are appended to the
+     * current directory, essentially acting as a shorthand for a relative
+     * path. If we remove the root directory, it should be the same, except
+     * without a root directory. */
+    new_path = libpath_path_init();
+
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "foo");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "bar");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_FILE, "baz.txt");
+
+    libpath_path_compile(new_path, buffer, 1024);
+    libpath_path_free(new_path);
+    assert(strcmp(buffer, "foo/bar/baz.txt") == 0);
+
+    /* Now.. how about referencing a directory ONLY? This will test whether
+     * or not the compiler produces a '/' on the last directory path. */
+    new_path = libpath_path_init();
+
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "foo");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "bar");
+
+    libpath_path_compile(new_path, buffer, 1024);
+    libpath_path_free(new_path);
+    assert(strcmp(buffer, "foo/bar") == 0);
+
+    /* Referencing literally only a single directory? */
+    new_path = libpath_path_init();
+
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_DIRECTORY, "foo");
+
+    libpath_path_compile(new_path, buffer, 1024);
+    libpath_path_free(new_path);
+    assert(strcmp(buffer, "foo") == 0);
+
+    /* How about only referencing a file? */
+    new_path = libpath_path_init();
+
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_FILE, "baz.txt");
+
+    libpath_path_compile(new_path, buffer, 1024);
+    libpath_path_free(new_path);
+    assert(strcmp(buffer, "baz.txt") == 0);
+
+    /* Root and a file? */
+    new_path = libpath_path_init();
+
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_ROOT, "");
+    libpath_path_add_component(new_path, LIBPATH_COMPONENT_FILE, "baz.txt");
+
+    libpath_path_compile(new_path, buffer, 1024);
+    libpath_path_free(new_path);
+    assert(strcmp(buffer, "/baz.txt") == 0);
 
     return 0;
 }

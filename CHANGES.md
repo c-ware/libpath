@@ -1,13 +1,17 @@
 # CHANGELOG.md
 
 VERSION: 1.0.2
-DATE: July 11th, 2022
+DATE: July 13th, 2022
 
-# Features
+## Features
 - OS/2 support for macros, and functions.
 
-# Misc.
+## Work In Progress
+- Adding path compilation for cross platform path creation.
+- Added a compiler for UNIX paths.
+
+## Misc.
 No misc. features.
 
-# Breaking Changes
+## Breaking Changes
 - Changed `libpath_free_glob` to `libpath_glob_free`
