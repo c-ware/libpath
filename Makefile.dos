@@ -5,7 +5,7 @@
 CC=cl
 LINKER=link
 OBJS=src\iter.obj src\libpath.obj src\compile\error.obj src\compile\backends\unix.obj src\compile\path.obj 
-TESTS=tests\joinpath.exe tests\mkdir.exe tests\globbing.exe tests\rmdir.exe tests\compile.exe 
+TESTS=tests\joinpath.exe tests\mkdir.exe tests\globbing.exe tests\rmdir.exe tests\compile\compile.exe 
 
 .SUFFIXES: .c .exe .obj
 

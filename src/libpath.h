@@ -131,6 +131,7 @@
 #define LIBPATH_COMPONENT_DRIVE     0
 #define LIBPATH_COMPONENT_FILE      1
 #define LIBPATH_COMPONENT_DIRECTORY 2
+#define LIBPATH_COMPONENT_ROOT      3
 
 /*
  * @docgen: structure

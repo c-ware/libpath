@@ -63,6 +63,44 @@ void _libpath_drive_location(struct LibpathPath *path) {
     }
 }
 
+void _libpath_root_location(struct LibpathPath *path) {
+    int index = 0;
+    int root_location = -1;
+
+    /* Determine where the root is, if anywhere. */
+    for(index = 0; index < carray_length(path); index++) {
+        if(path->contents[index].type != LIBPATH_COMPONENT_ROOT)
+            continue;
+
+        root_location = index;
+
+        break;
+    }
+
+    /* No root here */
+    if(root_location == -1)
+        return;
+
+    /* Root exists. path->contents[root_location - 1] should either be
+     * out of bounds ((root - location) < 0), which implies the path
+     * starts with root, or be a drive. For case where the drive is followed
+     * by a root component, but both are not at the start, the _libpath_drive_location
+     * function will handle this by asserting that the drive must be at the
+     * syart if it exists. */
+
+    /* Root is the first component-- move on. */
+    if(root_location == 0)
+        return;
+
+    /* Root is already after a drive, which is OK and expected. */
+    if(path->contents[root_location - 1].type == LIBPATH_COMPONENT_DRIVE)
+        return;
+
+    fprintf(stderr, "%s", "_libpath_root_location: root component not at the "
+            "start of the path, or does not immediately follow a drive.\n");
+    exit(EXIT_FAILURE);
+}
+
 void _libpath_file_location(struct LibpathPath *path) {
     int index = 0;
     int found_file = 0;
@@ -93,3 +131,4 @@ void _libpath_file_location(struct LibpathPath *path) {
         exit(EXIT_FAILURE);
     }
 }
+

@@ -3,7 +3,7 @@
 #
 # $1: the debugger to run the file on
 
-for test_file in tests/*; do
+for test_file in `find tests/ -type f`; do
     if [ ! -x "$test_file" ] || [ -d "$test_file" ]; then
         continue
     fi

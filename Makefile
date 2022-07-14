@@ -1,5 +1,5 @@
 OBJS=src/iter.o src/libpath.o src/compile/error.o src/compile/path.o src/compile/backends/unix.o 
-TESTS=tests/joinpath tests/mkdir tests/globbing tests/rmdir tests/compile 
+TESTS=tests/joinpath tests/mkdir tests/globbing tests/rmdir tests/compile/compile 
 HEADERS=src/lp_inter.h src/libpath.h src/compile/path.h src/carray/carray.h src/liberror/liberror.h 
 CC=cc
 PREFIX=/usr/local
@@ -40,8 +40,8 @@ tests/globbing: tests/globbing.c tests/common.h $(OBJS)
 tests/rmdir: tests/rmdir.c tests/common.h $(OBJS)
 	$(CC) tests/rmdir.c -o tests/rmdir $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
-tests/compile: tests/compile.c tests/common.h $(OBJS)
-	$(CC) tests/compile.c -o tests/compile $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+tests/compile/compile: tests/compile/compile.c tests/common.h $(OBJS)
+	$(CC) tests/compile/compile.c -o tests/compile/compile $(OBJS) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
 src/iter.o: src/iter.c
 	$(CC) -c $(CFLAGS) src/iter.c -o src/iter.o
@@ -52,10 +52,10 @@ src/libpath.o: src/libpath.c src/libpath.h src/lp_inter.h
 src/compile/error.o: src/compile/error.c src/compile/path.h src/libpath.h src/lp_inter.h
 	$(CC) -c $(CFLAGS) src/compile/error.c -o src/compile/error.o
 
-src/compile/path.o: src/compile/path.c src/libpath.h src/lp_inter.h
+src/compile/path.o: src/compile/path.c src/compile/path.h src/libpath.h src/lp_inter.h
 	$(CC) -c $(CFLAGS) src/compile/path.c -o src/compile/path.o
 
-src/compile/backends/unix.o: src/compile/backends/unix.c
+src/compile/backends/unix.o: src/compile/backends/unix.c src/compile/path.h
 	$(CC) -c $(CFLAGS) src/compile/backends/unix.c -o src/compile/backends/unix.o
 
 libpath.so: $(OBJS)

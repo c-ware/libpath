@@ -2,7 +2,7 @@
  * Tests for compiling paths.
 */
 
-#include "common.h"
+#include "../common.h"
 
 int main(void) {
     char buffer[2048 + 1] = "";
