@@ -5,9 +5,13 @@ independent fashion. It supports common operations like directory creation
 and removal, iterating through directories, system-independent path representation,
 and more for the following operating systems:
     - MS-DOS
+</br>
     - Windows NT
+</br>
     - OS/2
+</br>
     - \*NIX
+</br>
     - OpenVMS
 
 ## System-independent paths
@@ -42,18 +46,26 @@ int main(void) {
 ## Test build instructions
 When using libpath, there are some things that must be done to build tests.
 Unless you are on an operating system specified below, you can go through the
-normal build steps. Note, however, that this is for building *tests*. If you
-want to use libpath in your project, see `Using Libpath In Your Project`.
+normal build steps using `Makefile.cc`. Note, however, that this is for
+building *tests*. If you want to use libpath in your project, see `Using Libpath
+In Your Project`.
 
-### NeXTSTEP
-To build on NeXTSTEP, you will need to pass `CPP=path/to/cpp` for your build.
+### ULTRIX VCC
+VAX ULTRIX 4.5, which this was tested on, has two compilers on it-- `vcc`, and `cc`.
+This library was tested with `vcc`, and will likely not work with `cc`. Because of
+this, if you are compiling on ULTRIX, please use `Makefile.vcc`
 
-### ULTRIX
-To build on ULTRIX, You will need to add `-D__ULTRIX__` to your OSFLAGS to
-signal to the code that you are building on ULTRIX.
+### OS/2 Warp, DOS, and NT
+OS/2, DOS, and NT all have no C compiler installed on them by default. However,
+Watcom is one of the compilers that can be built on them. While MSVC support is in
+the works, currently, this only supports a Makefile for the Watcom compiler. If
+you are using Watcom, please use `Makefile.wat`
 
-### QuasiBSD
-To build on QuasiBSD, You will need to add `-D__QuasiBSD__` to your OSFLAGS to
-signal to the code that you are building on QuasiBSD.
+## Possible Questions
 
-## Using Libpath In Your Project
+### Why is the code so ugly?
+It's not. At least, I hope it's not. What you are probably looking at is the *preprocessed*
+source code of some parts of libpath. Some source and header files will have files which are
+intended to be preprocessed before being pushed as \*.m4c and \*.m4h respectively. If the
+source code in their preprocessed forms are too much for you-- and I don't blame you-- then
+see the non-preprocessed code.
