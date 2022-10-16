@@ -1,0 +1,18 @@
+.TH "LibpathPathComponent" "cware" "Oct 16, 2022" "" "C-Ware Manuals"
+.SH NAME
+LibpathPathComponent - a component in a path that should be compiled
+.SH SYNOPSIS
+/* a component in a path that should be compiled */
+.br
+struct LibpathPathComponent {
+.br
+    /* the type of component (drive, extension, directory, ...) */
+.br
+    int type;
+.br
+    /* the textual component of the path (e.g directory name) */
+.br
+    const char *text;
+.br
+}
+.br

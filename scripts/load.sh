@@ -1,22 +1,44 @@
 #!/bin/sh
-# Load documentation and Makefiles. Requires docgen and makegen
-# as dependencies. Although, this realistically should not be
-# ran by end users, and should instead be ran by developers.
+# Process all files with m4 and output them to their respective directories.
+# This should be called from the root directory of the project.
 
-docgen project ./src/libpath.h --section cware  \
-                               --format manpage \
-                               --title 'C-Ware Manuals' \
-                               --date "`date +'%B %d, %Y'`"
+# Process m4c files with m4
+for M4C_FILE in `find . -type f -name '*.m4c'`; do
+    STRIPPED=`echo $M4C_FILE | sed 's/\.m4c$/.c/g'`;
+    m4 -Itemplate $M4C_FILE > $STRIPPED;
+done
 
-docgen functions ./src/libpath.h --section cware  \
-                                 --format manpage \
-                                 --title 'C-Ware Manuals' \
-                                 --date "`date +'%B %d, %Y'`"
+# Process m4h files with m4
+for M4H_FILE in `find . -type f -name '*.m4h'`; do
+    STRIPPED=`echo $M4H_FILE | sed 's/\.m4h$/.h/g'`;
+    m4 -Itemplate $M4H_FILE > $STRIPPED;
+done
 
-makegen library unix --name libpath \
-                     --cflags '\-fpic' > Makefile
+# These environment variables tell certain Make variables what to store
+# to allow for consistency between them.
 
-makegen library unix --name libpath \
-                     --ldlibs '\-lm' --cflags '\-fpic -Wall -Wextra -Wpedantic -Wshadow -ansi -g -Wno-unused-parameter -Wno-type-limits -Wno-sign-compare' > Makefile.dev
+UNIX_OBJS="src/objects/path.o"
+UNIX_TESTS="tests/path/init"
+UNIX_CPPFLAGS="-I/usr/include -Isrc/liberror -Isrc/objects -Itests -Isrc -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr"
 
-m4 ./template/Makefile.dos > ./Makefile.dos
+WAT_OBJS="src\objects\path.obj"
+WAT_TESTS="tests\path\init.exe"
+WAT_CPPFLAGS="-i\usr\include -isrc\liberror -isrc\objects -itests -isrc -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr"
+
+
+# Process the Makefiles
+m4 -DMK_CPPFLAGS="$UNIX_CPPFLAGS" -DMK_OBJECTS="$UNIX_OBJS" \
+    -DMK_TESTS="$UNIX_TESTS" \
+    template/Makefile.cc > Makefile.cc
+
+m4 -DMK_CPPFLAGS="$UNIX_CPPFLAGS" -DMK_OBJECTS="$UNIX_OBJS" \
+    -DMK_TESTS="$UNIX_TESTS" \
+    template/Makefile.vcc > Makefile.vcc
+
+m4 -DMK_CPPFLAGS="$WAT_CPPFLAGS" -DMK_OBJECTS="$WAT_OBJS" \
+    -DMK_TESTS="$WAT_TESTS" \
+    template/Makefile.wat > Makefile.wat
+
+# Load documentation
+cat src/libpath.h | docgen-extractor-c | docgen-compiler-c | docgen-backend-manpage --section 'cware' --title 'C-Ware Manuals' --date "`date +'%b %d, %Y'`"
+cat src/objects/path.h | docgen-extractor-c | docgen-compiler-c | docgen-backend-manpage --section 'cware' --title 'C-Ware Manuals' --date "`date +'%b %d, %Y'`"

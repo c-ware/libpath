@@ -1,11 +1,11 @@
-#ifndef CWARE_LIBCWPATH_COMMON_H
-#define CWARE_LIBCWPATH_COMMON_H
+#ifndef COMMON_H
+#define COMMON_H
 
-#include <stdio.h>
-#include <string.h>
+#if !defined(__QuasiBSD__)
 #include <stdlib.h>
-#include <assert.h>
+#endif
 
-#include "../src/libpath.h"
+#include "libpath.h"
+#include "libassert.h"
 
 #endif

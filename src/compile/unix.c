@@ -36,6 +36,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "libpath.h"
+/*
+ * The path compiler for UNIX systems.
+*/
+
+#define LIBPATH_INTERNAL
 
 

@@ -36,6 +36,100 @@
  * POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
+ * The path object. This contains all the operations on a path object,
+ * like initialization, adding components, and freeing.
+*/
+
+
+
+#include <stdio.h>
+#include <assert.h>
+#include <string.h>
+
+
+#if defined(__ULTRIX__) || defined(__QuasiBSD__)
+#   if !defined(CWUTILS_GENERIC)
+#       define CWUTILS_GENERIC char *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#       define CWUTILS_NULL    ((char *) 0)
+#   endif
+#else
+#   if !defined(CWUTILS_GENERIC)
+#      define CWUTILS_GENERIC void *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#      define CWUTILS_NULL    ((void *) 0)
+#   endif
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define LIBPATH_INTERNAL
+
 #include "libpath.h"
+#include "path.h"
 
+struct LibpathPath *libpath_path_init() {
+    struct LibpathPath *new_path = (struct LibpathPath *) CWUTILS_NULL;
 
+    
+    CWUTILS_NULL;
+
+	(new_path) = (struct LibpathPath *) malloc(sizeof(*(new_path)));
+	(new_path)->used = 0;
+	(new_path)->length = 0;
+
+    LIBERROR_IS_NULL((new_path), "(new_path)");
+    LIBERROR_IS_NEGATIVE((new_path)->used, "(new_path)->used");
+    LIBERROR_IS_NEGATIVE((new_path)->length, "(new_path)->length");
+
+	(new_path)->capacity = 3;
+	(new_path)->contents = (struct LibpathPathComponent *) malloc(sizeof(struct LibpathPathComponent) * 3);
+
+    
+    LIBERROR_IS_NULL((new_path), "(new_path)");
+    LIBERROR_IS_NULL((new_path)->contents, "(new_path)->contents");
+    LIBERROR_IS_NEGATIVE((new_path)->used, "(new_path)->used");
+    LIBERROR_IS_NEGATIVE((new_path)->length, "(new_path)->length");
+    LIBERROR_IS_NEGATIVE((new_path)->capacity, "(new_path)->capacity")
+
+;
+
+    return new_path;
+}

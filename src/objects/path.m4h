@@ -36,6 +36,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "libpath.h"
+include(m4array/m4array.m4)
 
+#ifndef CWARE_LIBPATH_OBJECT_PATH
+#define CWARE_LIBPATH_OBJECT_PATH
 
+M4ARRAY_DECLARE(LibpathPath, struct LibpathPathComponent);
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_init
+ * @brief: initialize a new path array
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @Initializes a new path array, which will be used to compile a system
+ * @dependent path.
+ * @description
+ *
+ * @return_value
+ * @An array of path components
+ * @return_value
+ *
+ * @type: struct LibpathPath
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ * 
+ * @docgen_end
+*/
+struct LibpathPath *libpath_path_init();
+
+#endif

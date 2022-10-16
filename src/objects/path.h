@@ -36,6 +36,96 @@
  * POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "libpath.h"
 
 
+#include <stdio.h>
+#include <assert.h>
+#include <string.h>
+
+
+#if defined(__ULTRIX__) || defined(__QuasiBSD__)
+#   if !defined(CWUTILS_GENERIC)
+#       define CWUTILS_GENERIC char *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#       define CWUTILS_NULL    ((char *) 0)
+#   endif
+#else
+#   if !defined(CWUTILS_GENERIC)
+#      define CWUTILS_GENERIC void *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#      define CWUTILS_NULL    ((void *) 0)
+#   endif
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ifndef CWARE_LIBPATH_OBJECT_PATH
+#define CWARE_LIBPATH_OBJECT_PATH
+
+
+    struct LibpathPath {
+        int used;
+        int length;
+        int capacity;
+
+        struct LibpathPathComponent *contents;
+    }
+;
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_init
+ * @brief: initialize a new path array
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @Initializes a new path array, which will be used to compile a system
+ * @dependent path.
+ * @description
+ *
+ * @return_value
+ * @An array of path components
+ * @return_value
+ *
+ * @type: struct LibpathPath
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ * 
+ * @docgen_end
+*/
+struct LibpathPath *libpath_path_init();
+
+#endif

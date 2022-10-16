@@ -36,6 +36,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
+ * The path object. This contains all the operations on a path object,
+ * like initialization, adding components, and freeing.
+*/
+
+include(m4array/m4array.m4)
+include(property/arrays.m4)
+
+#define LIBPATH_INTERNAL
+
 #include "libpath.h"
+#include "path.h"
 
+struct LibpathPath *libpath_path_init() {
+    struct LibpathPath *new_path = (struct LibpathPath *) CWUTILS_NULL;
 
+    M4ARRAY_INIT(new_path, LIBPATH_PATH);
+
+    return new_path;
+}
