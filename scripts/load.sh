@@ -18,11 +18,11 @@ done
 # to allow for consistency between them.
 
 UNIX_OBJS="src/objects/path.o"
-UNIX_TESTS="tests/path/init"
+UNIX_TESTS="tests/path/init tests/path/free"
 UNIX_CPPFLAGS="-I/usr/include -Isrc/liberror -Isrc/objects -Itests -Isrc -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr"
 
 WAT_OBJS="src\objects\path.obj"
-WAT_TESTS="tests\path\init.exe"
+WAT_TESTS="tests\path\init.exe tests\path\free.exe"
 WAT_CPPFLAGS="-i\usr\include -isrc\liberror -isrc\objects -itests -isrc -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr"
 
 

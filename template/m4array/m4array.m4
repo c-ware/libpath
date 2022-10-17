@@ -119,26 +119,6 @@ dnl @docgen_end
 #include <assert.h>
 #include <string.h>
 
-dnl ==============================
-dnl # M4array portability macros #
-dnl ==============================
-
-#if defined(__ULTRIX__) || defined(__QuasiBSD__)
-#   if !defined(CWUTILS_GENERIC)
-#       define CWUTILS_GENERIC char *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#       define CWUTILS_NULL    ((char *) 0)
-#   endif
-#else
-#   if !defined(CWUTILS_GENERIC)
-#      define CWUTILS_GENERIC void *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#      define CWUTILS_NULL    ((void *) 0)
-#   endif
-#endif
-
 dnl ==========================
 dnl	# M4array utility macros #
 dnl ==========================

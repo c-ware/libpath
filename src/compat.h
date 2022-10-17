@@ -37,55 +37,32 @@
 */
 
 /* 
- * The header for libpath. To access internal header declarations, define the
- * LIBPATH_INTERNAL macro before including this header.
+ * This header contains all of the "portability" macros. This header is
+ * included in each file, including header files. It contains macros needed
+ * for making sure the code works properly on other operating systems.
 */
 
-include(m4array/m4array.m4)
-
-#ifndef CWARE_LIBPATH_H
-#define CWARE_LIBPATH_H
-
-/* Library components */
-#include "path.h"
-
-/* Internal headers and declarations */
-#if defined(LIBPATH_INTERNAL)
-
-/* System headers */
-#include <stdio.h>
-
-#if !defined(__QuasiBSD__)
-#   include <stdlib.h>
-#endif
-
-/* Global dependencies */
-#include "liberror.h"
-
-/*
- * @docgen_start
- * @type: structure
- * @name: LibpathPathComponent
- * @brief: a component in a path that should be compiled
- *
- * @embed: LibpathPathComponent
- * @show_brief: 1
- *
- * @field: type
- * @type: int
- * @brief: the type of component (drive, extension, directory, ...)
- *
- * @field: text
- * @type: const char *
- * @brief: the textual component of the path (e.g directory name)
- * 
- * @docgen_end
-*/
-struct LibpathPathComponent {
-    int type;
-    CWUTILS_CONST char *text;   
-};
-
-#endif
-
+#if defined(__ULTRIX__) || defined(__QuasiBSD__)
+#   if !defined(CWUTILS_GENERIC)
+#       define CWUTILS_GENERIC char *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#       define CWUTILS_NULL    ((char *) 0)
+#   endif
+#   if !defined(CWUTILS_CONST)
+#       define CWUTILS_CONST
+#   endif
+#   if !defined(CWUTILS_ANCIENT)
+#       define CWUTILS_ANCIENT
+#   endif
+#else
+#   if !defined(CWUTILS_GENERIC)
+#      define CWUTILS_GENERIC void *
+#   endif
+#   if !defined(CWUTILS_NULL)
+#      define CWUTILS_NULL    ((void *) 0)
+#   endif
+#   if !defined(CWUTILS_CONST)
+#       define CWUTILS_CONST    const
+#   endif
 #endif

@@ -37,5 +37,3 @@
 */
 
 #include "libpath.h"
-
-

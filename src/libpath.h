@@ -48,23 +48,6 @@
 #include <string.h>
 
 
-#if defined(__ULTRIX__) || defined(__QuasiBSD__)
-#   if !defined(CWUTILS_GENERIC)
-#       define CWUTILS_GENERIC char *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#       define CWUTILS_NULL    ((char *) 0)
-#   endif
-#else
-#   if !defined(CWUTILS_GENERIC)
-#      define CWUTILS_GENERIC void *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#      define CWUTILS_NULL    ((void *) 0)
-#   endif
-#endif
-
-
 
 
 
@@ -99,38 +82,6 @@
 
 /* Library components */
 #include "path.h"
-
-/* libpath portability macros. This is mostly because some
- * K&R systems do not have NULL, or the concept of a void
- * pointer. Some systems (K&R, again) also need special
- * function declarations. */
-#if defined(__ULTRIX__) || defined(__QuasiBSD__)
-#   if !defined(CWUTILS_GENERIC)
-#       define CWUTILS_GENERIC char *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#       define CWUTILS_NULL    ((char *) 0)
-#   endif
-#   if !defined(CWUTILS_CONST)
-#       define CWUTILS_CONST
-#   endif
-#   if !defined(CWUTILS_ANCIENT)
-#       define CWUTILS_ANCIENT    1
-#   endif
-#else
-#   if !defined(CWUTILS_GENERIC)
-#      define CWUTILS_GENERIC void *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#      define CWUTILS_NULL    ((void *) 0)
-#   endif
-#   if !defined(CWUTILS_ANCIENT)
-#       define CWUTILS_ANCIENT    0
-#   endif
-#   if !defined(CWUTILS_CONST)
-#       define CWUTILS_CONST    const
-#   endif
-#endif
 
 /* Internal headers and declarations */
 #if defined(LIBPATH_INTERNAL)

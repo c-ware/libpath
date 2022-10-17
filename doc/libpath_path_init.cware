@@ -1,4 +1,4 @@
-.TH "libpath_path_init" "cware" "Oct 16, 2022" "" "C-Ware Manuals"
+.TH "libpath_path_init" "cware" "Oct 17, 2022" "" "C-Ware Manuals"
 .SH NAME
 libpath_path_init - initialize a new path array
 .SH SYNOPSIS

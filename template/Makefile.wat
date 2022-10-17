@@ -33,5 +33,6 @@ COMPILE_FILE(src\objects\path)
 
 # Test building
 COMPILE_TEST(tests\path\init)
+COMPILE_TEST(tests\path\free)
 
 .SUFFIXES:

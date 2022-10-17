@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #endif
 
+#include "compat.h"
 #include "libpath.h"
 #include "libassert.h"
 

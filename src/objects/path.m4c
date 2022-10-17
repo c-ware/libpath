@@ -46,6 +46,7 @@ include(property/arrays.m4)
 
 #define LIBPATH_INTERNAL
 
+#include "compat.h"
 #include "libpath.h"
 #include "path.h"
 
@@ -54,5 +55,18 @@ struct LibpathPath *libpath_path_init() {
 
     M4ARRAY_INIT(new_path, LIBPATH_PATH);
 
+    LIBERROR_MALLOC_FAILURE(new_path, "new_path");
+
     return new_path;
+}
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_free(path)
+    struct LibpathPath *path; {
+#else
+void libpath_path_free(struct LibpathPath *path) {
+#endif
+    LIBPATH_PATH_VALIDATE(path);
+
+    M4ARRAY_FREE(path, LIBPATH_PATH);
 }

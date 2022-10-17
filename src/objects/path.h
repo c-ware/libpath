@@ -43,23 +43,6 @@
 #include <string.h>
 
 
-#if defined(__ULTRIX__) || defined(__QuasiBSD__)
-#   if !defined(CWUTILS_GENERIC)
-#       define CWUTILS_GENERIC char *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#       define CWUTILS_NULL    ((char *) 0)
-#   endif
-#else
-#   if !defined(CWUTILS_GENERIC)
-#      define CWUTILS_GENERIC void *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#      define CWUTILS_NULL    ((void *) 0)
-#   endif
-#endif
-
-
 
 
 
@@ -92,6 +75,8 @@
 #ifndef CWARE_LIBPATH_OBJECT_PATH
 #define CWARE_LIBPATH_OBJECT_PATH
 
+#include "compat.h"
+
 
     struct LibpathPath {
         int used;
@@ -101,6 +86,13 @@
         struct LibpathPathComponent *contents;
     }
 ;
+
+#define LIBPATH_PATH_VALIDATE(item)                         \
+    LIBERROR_IS_NULL(item, "value");                        \
+    LIBERROR_IS_NEGATIVE(item->used, "value->used");        \
+    LIBERROR_IS_NULL(item->contents, "value->contents");    \
+    LIBERROR_IS_NEGATIVE(item->length, "value->length");    \
+    LIBERROR_IS_NEGATIVE(item->capacity, "value->capacity")
 
 /*
  * @docgen_start
@@ -127,5 +119,32 @@
  * @docgen_end
 */
 struct LibpathPath *libpath_path_init();
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_free
+ * @brief: release a path array
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @Releases a path array from memory.
+ * @description
+ *
+ * @fparam: path
+ * @type: struct LibpathPath *
+ * @brief: the path to release from memory
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ *
+ * @docgen_end
+*/
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_free();
+#else
+void libpath_path_free(struct LibpathPath *path);
+#endif
 
 #endif

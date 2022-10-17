@@ -1,0 +1,17 @@
+.TH "libpath_path_free" "cware" "Oct 17, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_free - release a path array
+.SH SYNOPSIS
+#include "libpath.h"
+.br
+
+\fBvoid libpath_path_free(struct LibpathPath *\fR\fIpath\fR);
+.br
+.SH DESCRIPTION
+Releases a path array from memory.
+
+
+\fIpath\fR will be the path to release from memory
+.br
+.SH SEE ALSO
+libpath(cware), cware(cware)

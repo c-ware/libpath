@@ -48,23 +48,6 @@
 #include <string.h>
 
 
-#if defined(__ULTRIX__) || defined(__QuasiBSD__)
-#   if !defined(CWUTILS_GENERIC)
-#       define CWUTILS_GENERIC char *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#       define CWUTILS_NULL    ((char *) 0)
-#   endif
-#else
-#   if !defined(CWUTILS_GENERIC)
-#      define CWUTILS_GENERIC void *
-#   endif
-#   if !defined(CWUTILS_NULL)
-#      define CWUTILS_NULL    ((void *) 0)
-#   endif
-#endif
-
-
 
 
 
@@ -102,6 +85,7 @@
 
 #define LIBPATH_INTERNAL
 
+#include "compat.h"
 #include "libpath.h"
 #include "path.h"
 
@@ -131,5 +115,39 @@ struct LibpathPath *libpath_path_init() {
 
 ;
 
+    LIBERROR_MALLOC_FAILURE(new_path, "new_path");
+
     return new_path;
+}
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_free(path)
+    struct LibpathPath *path; {
+#else
+void libpath_path_free(struct LibpathPath *path) {
+#endif
+    LIBPATH_PATH_VALIDATE(path);
+
+    
+    
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+	do {
+		int __M4_INDEX = 0;
+
+		while(__M4_INDEX < (path)->length) {
+            LIBERROR_IS_OOB(__M4_INDEX, (path)->length);
+			;
+			__M4_INDEX++;
+		}
+
+		free((path)->contents);
+		free((path));
+	} while(0)
+;
 }

@@ -14,7 +14,7 @@ OSFLAGS=
 CFLAGS=
 CPPFLAGS=$(OSFLAGS) -i\usr\include -isrc\liberror -isrc\objects -itests -isrc -DLIBERROR_ENABLED -DLIBERROR_STREAM=stderr
 OBJS=src\objects\path.obj
-TESTS=tests\path\init.exe
+TESTS=tests\path\init.exe tests\path\free.exe
 
 
 
@@ -33,5 +33,8 @@ src\objects\path.obj: src\objects\path.c
 tests\path\init.exe: tests\path\init.c
 	$(CC) tests\path\init.c $(CFLAGS) $(CPPFLAGS) /fo=tests\path\init.obj
 	$(LD) FILE tests\path\init.obj,$(OBJS) NAME tests\path\init.exe
+tests\path\free.exe: tests\path\free.c
+	$(CC) tests\path\free.c $(CFLAGS) $(CPPFLAGS) /fo=tests\path\free.obj
+	$(LD) FILE tests\path\free.obj,$(OBJS) NAME tests\path\free.exe
 
 .SUFFIXES:
