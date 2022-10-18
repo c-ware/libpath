@@ -94,6 +94,13 @@
     LIBERROR_IS_NEGATIVE(item->length, "value->length");    \
     LIBERROR_IS_NEGATIVE(item->capacity, "value->capacity")
 
+/* Types of path component */
+#define LIBPATH_PATH_TYPE_DRIVE      0
+#define LIBPATH_PATH_TYPE_ROOT       1
+#define LIBPATH_PATH_TYPE_FILE       2
+#define LIBPATH_PATH_TYPE_DIRECTORY  3
+#define LIBPATH_PATH_TYPE_EXTENSION  4
+
 /*
  * @docgen_start
  * @type: function
@@ -145,6 +152,201 @@ struct LibpathPath *libpath_path_init();
 void libpath_path_free();
 #else
 void libpath_path_free(struct LibpathPath *path);
+#endif
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_add_root
+ * @brief: add a path root component to the path
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will add a "root" path object to the path array.
+ * @On UNIX-like systems, it will evaluate to \B/\B, on DOS, NT, and OS/2,
+ * @it will evaluate to \B\\\\\B, and on VMS it will evaluate to \B[000000]\B.
+ * @description
+ *
+ * @notes
+ * @This, among a couple other path components, can only appear ONCE in a
+ * @path array.
+ * @notes
+ *
+ * @fparam: path
+ * @type: struct LibpathPath *
+ * @brief: the path array to add the root to
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ *
+ * @docgen_end
+*/
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_root();
+#else
+void libpath_path_add_root(struct LibpathPath *path);
+#endif
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_add_drive
+ * @brief: add a drive to the path
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will add a drive to the path.
+ * @description
+ *
+ * @notes
+ * @This, among a couple other path components, can only appear ONCE in a
+ * @path array.
+ * @notes
+ *
+ * @fparam: path
+ * @type: struct Libpath *
+ * @brief: the path array to add the drive to
+ *
+ * @fparam: name
+ * @type: const char *
+ * @brief: the name of the drive
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ *
+ * @docgen_end
+*/
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_drive();
+#else
+void libpath_path_add_drive(struct LibpathPath *path, CWUTILS_CONST char *name);
+#endif
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_add_file
+ * @brief: add a file to the path
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will add a file name to the path. This function does not
+ * @add an extension, so if you do foo.txt, the .txt will be apart of the
+ * @file name, rather than the extension.
+ * @
+ * @Some operating systems have limits on directory name lengths, so if the
+ * @target OS does not support a length of directory name you gave it, it will
+ * @throw an error.
+ * @description
+ *
+ * @notes
+ * @This, among a couple other path components, can only appear ONCE in a
+ * @path array. Unlike others, though, it is optional, and if it does
+ * @exist, it must beat the end of the array.
+ * @notes
+ *
+ * @fparam: path
+ * @type: struct Libpath *
+ * @brief: the path array to add the file to
+ *
+ * @fparam: name
+ * @type: const char *
+ * @brief: the name of the file
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ *
+ * @docgen_end
+*/
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_file();
+#else
+void libpath_path_add_file(struct LibpathPath *path, CWUTILS_CONST char *name);
+#endif
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_add_directory
+ * @brief: add a directory to the path
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will a directory to the path array. Some operating systems
+ * @have limits on directory name lengths, so if the target OS does not
+ * @support a length of directory name you gave it, it will throw an error.
+ * @description
+ *
+ * @notes
+ * @This, among a couple other path components, can only appear ONCE in a
+ * @path array. Unlike others, though, it is optional, and if it does
+ * @exist, it must beat the end of the array.
+ * @notes
+ *
+ * @fparam: path
+ * @type: struct Libpath *
+ * @brief: the path array to add the file to
+ *
+ * @fparam: name
+ * @type: const char *
+ * @brief: the name of the file
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ *
+ * @docgen_end
+*/
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_directory();
+#else
+void libpath_path_add_directory(struct LibpathPath *path, CWUTILS_CONST char *name);
+#endif
+
+/*
+ * @docgen_start
+ * @type: function
+ * @name: libpath_path_add_extension
+ * @brief: add a file extension to the path
+ *
+ * @include: libpath.h
+ *
+ * @description
+ * @This function will a add a file extension to the target path. Some operating
+ * @systems have limits on file extension name lengths, so if the target OS does
+ * @not support extension names of the length you provide, an error will be
+ * @thrown.
+ * @description
+ *
+ * @notes
+ * @This, among a couple other path components, can only appear ONCE in a
+ * @path array. It is optional, although some operating systems like VMS
+ * @require a file extension (or at least, an EMPTY file extension).
+ * @
+ * @When this appears in the path array, it must appear directly AFTER a
+ * @file. Anything else is erroneous.
+ * @notes
+ *
+ * @fparam: path
+ * @type: struct Libpath *
+ * @brief: the path array to add the file to
+ *
+ * @fparam: name
+ * @type: const char *
+ * @brief: the name of the file
+ *
+ * @reference: libpath(cware)
+ * @reference: cware(cware)
+ *
+ * @docgen_end
+*/
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_extension();
+#else
+void libpath_path_add_extension(struct LibpathPath *path, CWUTILS_CONST char *name);
 #endif
 
 #endif

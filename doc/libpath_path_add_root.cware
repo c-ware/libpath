@@ -1,0 +1,22 @@
+.TH "libpath_path_add_root" "cware" "Oct 18, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_add_root - add a path root component to the path
+.SH SYNOPSIS
+#include "libpath.h"
+.br
+
+\fBvoid libpath_path_add_root(struct LibpathPath *\fR\fIpath\fR);
+.br
+.SH DESCRIPTION
+This function will add a "root" path object to the path array.
+On UNIX-like systems, it will evaluate to \fB/\fR, on DOS, NT, and OS/2,
+it will evaluate to \fB\\\fR, and on VMS it will evaluate to \fB[000000]\fR.
+
+
+\fIpath\fR will be the path array to add the root to
+.br
+.SH NOTES
+This, among a couple other path components, can only appear ONCE in a
+path array.
+.SH SEE ALSO
+libpath(cware), cware(cware)

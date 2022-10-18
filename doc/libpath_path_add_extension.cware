@@ -1,0 +1,29 @@
+.TH "libpath_path_add_extension" "cware" "Oct 18, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_add_extension - add a file extension to the path
+.SH SYNOPSIS
+#include "libpath.h"
+.br
+
+\fBvoid libpath_path_add_extension(struct Libpath *\fR\fIpath\fR,\fB const char *\fR\fIname\fR);
+.br
+.SH DESCRIPTION
+This function will a add a file extension to the target path. Some operating
+systems have limits on file extension name lengths, so if the target OS does
+not support extension names of the length you provide, an error will be
+thrown.
+
+
+\fIpath\fR will be the path array to add the file to
+.br
+\fIname\fR will be the name of the file
+.br
+.SH NOTES
+This, among a couple other path components, can only appear ONCE in a
+path array. It is optional, although some operating systems like VMS
+require a file extension (or at least, an EMPTY file extension).
+
+When this appears in the path array, it must appear directly AFTER a
+file. Anything else is erroneous.
+.SH SEE ALSO
+libpath(cware), cware(cware)

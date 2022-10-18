@@ -1,9 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#if !defined(__QuasiBSD__)
-#include <stdlib.h>
-#endif
+/* We want internal declarations */
+#define LIBPATH_INTERNAL
 
 #include "compat.h"
 #include "libpath.h"

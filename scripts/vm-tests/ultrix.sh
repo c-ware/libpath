@@ -28,4 +28,4 @@ $VM_ROOT/control/$VM_NAME/send.sh "$TEMP_DIR"/"$PROJECT_NAME".tar $TARGET_TEMP_D
 $VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR; tar -xf $TARGET_TEMP_DIR/$PROJECT_NAME.tar"
 
 # Build it, then run tests
-$VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR/$PROJECT_NAME; make -f Makefile.vcc; ./scripts/check.sh"
+$VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR/$PROJECT_NAME; make -f Makefile.vcc; make -f Makefile.vcc check"

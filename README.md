@@ -69,3 +69,8 @@ source code of some parts of libpath. Some source and header files will have fil
 intended to be preprocessed before being pushed as \*.m4c and \*.m4h respectively. If the
 source code in their preprocessed forms are too much for you-- and I don't blame you-- then
 see the non-preprocessed code.
+
+### Why are there so many changes in commits?
+Well, it's once again because of our code generation. If you think it's weird, so be it, but
+you have to remember that this is a library that is intended to be very portable. If our commit
+logs are a bit bloated, and that's the worst thing someone can find, I think I did an OK job.

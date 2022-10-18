@@ -29,4 +29,4 @@ $VM_ROOT/control/$VM_NAME/send.sh "$TEMP_DIR"/"$PROJECT_NAME".tar $TARGET_TEMP_D
 $VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR; tar -xf $TARGET_TEMP_DIR/$PROJECT_NAME.tar"
 
 # Build it, then run tests
-$VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR/$PROJECT_NAME; make -f Makefile.cc OSFLAGS=-D__QuasiBSD__; ./scripts/check.sh"
+$VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR/$PROJECT_NAME; make -f Makefile.cc OSFLAGS=-D__QuasiBSD__; make -f Makefile.cc check"

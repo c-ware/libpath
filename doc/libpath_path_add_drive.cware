@@ -1,0 +1,22 @@
+.TH "libpath_path_add_drive" "cware" "Oct 18, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_add_drive - add a drive to the path
+.SH SYNOPSIS
+#include "libpath.h"
+.br
+
+\fBvoid libpath_path_add_drive(struct Libpath *\fR\fIpath\fR,\fB const char *\fR\fIname\fR);
+.br
+.SH DESCRIPTION
+This function will add a drive to the path.
+
+
+\fIpath\fR will be the path array to add the drive to
+.br
+\fIname\fR will be the name of the drive
+.br
+.SH NOTES
+This, among a couple other path components, can only appear ONCE in a
+path array.
+.SH SEE ALSO
+libpath(cware), cware(cware)

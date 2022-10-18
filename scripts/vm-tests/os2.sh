@@ -30,4 +30,4 @@ $VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR && unzip -qq -o $TARGET_T
 
 # Build it, then run tests
 $VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR\\$PROJECT_NAME && wmake -f Makefile.wat"
-$VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR\\$PROJECT_NAME && scripts\check.cmd"
+$VM_ROOT/control/$VM_NAME/exec.sh "cd $TARGET_TEMP_DIR\\$PROJECT_NAME && wmake -f Makefile.wat check"

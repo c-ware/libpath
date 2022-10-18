@@ -1,0 +1,25 @@
+.TH "libpath_path_add_directory" "cware" "Oct 18, 2022" "" "C-Ware Manuals"
+.SH NAME
+libpath_path_add_directory - add a directory to the path
+.SH SYNOPSIS
+#include "libpath.h"
+.br
+
+\fBvoid libpath_path_add_directory(struct Libpath *\fR\fIpath\fR,\fB const char *\fR\fIname\fR);
+.br
+.SH DESCRIPTION
+This function will a directory to the path array. Some operating systems
+have limits on directory name lengths, so if the target OS does not
+support a length of directory name you gave it, it will throw an error.
+
+
+\fIpath\fR will be the path array to add the file to
+.br
+\fIname\fR will be the name of the file
+.br
+.SH NOTES
+This, among a couple other path components, can only appear ONCE in a
+path array. Unlike others, though, it is optional, and if it does
+exist, it must beat the end of the array.
+.SH SEE ALSO
+libpath(cware), cware(cware)

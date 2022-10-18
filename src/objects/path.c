@@ -89,6 +89,12 @@
 #include "libpath.h"
 #include "path.h"
 
+/*
+ * =====================
+ * # Memory management #
+ * =====================
+*/
+
 struct LibpathPath *libpath_path_init() {
     struct LibpathPath *new_path = (struct LibpathPath *) CWUTILS_NULL;
 
@@ -149,5 +155,314 @@ void libpath_path_free(struct LibpathPath *path) {
 		free((path)->contents);
 		free((path));
 	} while(0)
+;
+}
+
+/*
+ * ===================
+ * # Path components #
+ * ===================
+*/
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_root(path) 
+    struct LibpathPath *path; {
+#else
+void libpath_path_add_root(struct LibpathPath *path) {
+#endif
+    struct LibpathPathComponent component;
+
+    LIBPATH_PATH_VALIDATE(path);
+
+    /* The root directory is something that will have it's value determined
+     * when the path is compiled, so it will be NULL. */
+    component.text = CWUTILS_NULL;
+    component.type = LIBPATH_PATH_TYPE_ROOT;
+
+    
+    
+
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+do {
+	if(((path)->length == (path)->capacity) && ((path)->used == (path)->length)) {
+		(path)->contents = (struct LibpathPathComponent *) realloc((path)->contents, sizeof(struct LibpathPathComponent) * ((path)->capacity * 2));
+		(path)->capacity = ((path)->capacity * 2);
+
+        LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity");
+        LIBERROR_MALLOC_FAILURE((path)->contents, "(path)->contents");
+	}
+} while(0)
+;
+
+    
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+    /* If used < length, that means we have data in the array that
+       is currently unused, but initialized. We can reuse it. Otherwise,
+       we can just append like normal. */
+    if((path)->used < (path)->length) {
+        
+    } else {
+	    (path)->contents[(path)->length] = (component);
+	    (path)->length++;
+    }
+
+    (path)->used++;
+;
+}
+
+
+
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_drive(path, name) 
+    struct LibpathPath *path; 
+    CWUTILS_CONST  char *name; {
+#else
+void libpath_path_add_drive(struct LibpathPath *path, CWUTILS_CONST char *name) {
+#endif
+    struct LibpathPathComponent component;
+
+    LIBPATH_PATH_VALIDATE(path);
+    LIBERROR_IS_NULL(name, "drive");
+
+    component.text = (CWUTILS_CONST char *) name;
+    component.type = LIBPATH_PATH_TYPE_DRIVE;
+
+    
+    
+
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+do {
+	if(((path)->length == (path)->capacity) && ((path)->used == (path)->length)) {
+		(path)->contents = (struct LibpathPathComponent *) realloc((path)->contents, sizeof(struct LibpathPathComponent) * ((path)->capacity * 2));
+		(path)->capacity = ((path)->capacity * 2);
+
+        LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity");
+        LIBERROR_MALLOC_FAILURE((path)->contents, "(path)->contents");
+	}
+} while(0)
+;
+
+    
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+    /* If used < length, that means we have data in the array that
+       is currently unused, but initialized. We can reuse it. Otherwise,
+       we can just append like normal. */
+    if((path)->used < (path)->length) {
+        
+    } else {
+	    (path)->contents[(path)->length] = (component);
+	    (path)->length++;
+    }
+
+    (path)->used++;
+;
+}
+
+
+
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_file(path, name) 
+    struct LibpathPath *path; 
+    CWUTILS_CONST  char *name; {
+#else
+void libpath_path_add_file(struct LibpathPath *path, CWUTILS_CONST char *name) {
+#endif
+    struct LibpathPathComponent component;
+
+    LIBPATH_PATH_VALIDATE(path);
+    LIBERROR_IS_NULL(name, "name");
+
+    component.text = (CWUTILS_CONST char *) name;
+    component.type = LIBPATH_PATH_TYPE_FILE;
+
+    
+    
+
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+do {
+	if(((path)->length == (path)->capacity) && ((path)->used == (path)->length)) {
+		(path)->contents = (struct LibpathPathComponent *) realloc((path)->contents, sizeof(struct LibpathPathComponent) * ((path)->capacity * 2));
+		(path)->capacity = ((path)->capacity * 2);
+
+        LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity");
+        LIBERROR_MALLOC_FAILURE((path)->contents, "(path)->contents");
+	}
+} while(0)
+;
+
+    
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+    /* If used < length, that means we have data in the array that
+       is currently unused, but initialized. We can reuse it. Otherwise,
+       we can just append like normal. */
+    if((path)->used < (path)->length) {
+        
+    } else {
+	    (path)->contents[(path)->length] = (component);
+	    (path)->length++;
+    }
+
+    (path)->used++;
+;
+}
+
+
+
+
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_directory(path, name) 
+    struct LibpathPath *path; 
+    CWUTILS_CONST  char *name; {
+#else
+void libpath_path_add_directory(struct LibpathPath *path, CWUTILS_CONST char *name) {
+#endif
+    struct LibpathPathComponent component;
+
+    LIBPATH_PATH_VALIDATE(path);
+    LIBERROR_IS_NULL(name, "name");
+
+    component.text = (CWUTILS_CONST char *) name;
+    component.type = LIBPATH_PATH_TYPE_DIRECTORY;
+
+    
+    
+
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+do {
+	if(((path)->length == (path)->capacity) && ((path)->used == (path)->length)) {
+		(path)->contents = (struct LibpathPathComponent *) realloc((path)->contents, sizeof(struct LibpathPathComponent) * ((path)->capacity * 2));
+		(path)->capacity = ((path)->capacity * 2);
+
+        LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity");
+        LIBERROR_MALLOC_FAILURE((path)->contents, "(path)->contents");
+	}
+} while(0)
+;
+
+    
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+    /* If used < length, that means we have data in the array that
+       is currently unused, but initialized. We can reuse it. Otherwise,
+       we can just append like normal. */
+    if((path)->used < (path)->length) {
+        
+    } else {
+	    (path)->contents[(path)->length] = (component);
+	    (path)->length++;
+    }
+
+    (path)->used++;
+;
+}
+
+
+
+
+#if defined(CWUTILS_ANCIENT)
+void libpath_path_add_extension(path, name) 
+    struct LibpathPath *path; 
+    CWUTILS_CONST  char *name; {
+#else
+void libpath_path_add_extension(struct LibpathPath *path, CWUTILS_CONST char *name) {
+#endif
+    struct LibpathPathComponent component;
+
+    LIBPATH_PATH_VALIDATE(path);
+    LIBERROR_IS_NULL(name, "name");
+
+    component.text = (CWUTILS_CONST char *) name;
+    component.type = LIBPATH_PATH_TYPE_EXTENSION;
+
+    
+    
+
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+do {
+	if(((path)->length == (path)->capacity) && ((path)->used == (path)->length)) {
+		(path)->contents = (struct LibpathPathComponent *) realloc((path)->contents, sizeof(struct LibpathPathComponent) * ((path)->capacity * 2));
+		(path)->capacity = ((path)->capacity * 2);
+
+        LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity");
+        LIBERROR_MALLOC_FAILURE((path)->contents, "(path)->contents");
+	}
+} while(0)
+;
+
+    
+    LIBERROR_IS_NULL((path), "(path)");
+    LIBERROR_IS_NULL((path)->contents, "(path)->contents");
+    LIBERROR_IS_NEGATIVE((path)->used, "(path)->used");
+    LIBERROR_IS_NEGATIVE((path)->length, "(path)->length");
+    LIBERROR_IS_NEGATIVE((path)->capacity, "(path)->capacity")
+;
+
+    /* If used < length, that means we have data in the array that
+       is currently unused, but initialized. We can reuse it. Otherwise,
+       we can just append like normal. */
+    if((path)->used < (path)->length) {
+        
+    } else {
+	    (path)->contents[(path)->length] = (component);
+	    (path)->length++;
+    }
+
+    (path)->used++;
 ;
 }

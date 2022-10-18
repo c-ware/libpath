@@ -1,4 +1,4 @@
-.TH "LibpathPathComponent" "cware" "Oct 17, 2022" "" "C-Ware Manuals"
+.TH "LibpathPathComponent" "cware" "Oct 18, 2022" "" "C-Ware Manuals"
 .SH NAME
 LibpathPathComponent - a component in a path that should be compiled
 .SH SYNOPSIS
